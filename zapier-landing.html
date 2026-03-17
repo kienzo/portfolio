@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zapier Automations — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --surface: #ffffff;
+    --surface-alt: #ece7df;
+    --border: rgba(0, 0, 0, 0.08);
+    --border-hover: rgba(0, 0, 0, 0.18);
+    --text: #1a1a1a;
+    --text-muted: #7a756d;
+    --accent: #b8922e;
+    --accent-dim: #a07e22;
+    --accent-glow: rgba(184, 146, 46, 0.10);
+    --radius: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(184, 146, 46, 0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,0,0,0.08), transparent);
+  }
+
+  .hero-label {
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 32px;
+    font-weight: 500;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  .hero h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 1.05;
+    font-weight: 400;
+    color: var(--text);
+    max-width: 900px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-summary {
+    max-width: 620px;
+    margin-top: 32px;
+    font-size: 17px;
+    color: var(--text-muted);
+    line-height: 1.8;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.5s;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 48px;
+    margin-top: 56px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+
+  .hero-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .hero-meta-item span:first-child {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .hero-meta-item span:last-child {
+    font-size: 15px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  section {
+    padding: 100px 60px;
+    position: relative;
+  }
+
+  section::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 60px; right: 60px;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+
+  .section-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 400;
+    line-height: 1.15;
+    max-width: 700px;
+    margin-bottom: 48px;
+  }
+
+  .section-title em { font-style: italic; color: var(--accent); }
+
+  .integrations-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .integration-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 22px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    transition: border-color 0.3s ease;
+  }
+
+  .integration-chip:hover {
+    border-color: var(--accent-dim);
+  }
+
+  .chip-icon {
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+    background: rgba(184, 146, 46, 0.10);
+  }
+
+  .agents-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+
+  .agent-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .agent-card:hover {
+    border-color: var(--accent-dim);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  }
+
+  .agent-card-visual {
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .agent-card-visual .visual-icon {
+    font-size: 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .agent-card-visual .visual-label {
+    position: absolute;
+    bottom: 14px;
+    right: 16px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    opacity: 0.6;
+  }
+
+  .visual-filter {
+    background: linear-gradient(135deg, #efe8da 0%, #f0ebe2 50%, #ede6dc 100%);
+  }
+  .visual-filter::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 50%, rgba(184,146,46,0.08), transparent 60%);
+  }
+
+  .visual-ticket {
+    background: linear-gradient(135deg, #e8eaf0 0%, #edeef2 50%, #f0ebe2 100%);
+  }
+  .visual-ticket::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 70% 40%, rgba(74,120,200,0.06), transparent 60%);
+  }
+
+  .visual-roadmap {
+    background: linear-gradient(135deg, #e6efe8 0%, #ebf0ec 50%, #f0ede6 100%);
+  }
+  .visual-roadmap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 60%, rgba(46,160,100,0.06), transparent 60%);
+  }
+
+  .visual-aggregator {
+    background: linear-gradient(135deg, #ece6f2 0%, #efecf2 50%, #ede9e6 100%);
+  }
+  .visual-aggregator::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 60% 30%, rgba(130,90,200,0.06), transparent 60%);
+  }
+
+  .agent-card-body {
+    padding: 32px;
+  }
+
+  .agent-card-body h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .agent-card-body p {
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag {
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 12px;
+  }
+
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-top: 64px;
+  }
+
+  .stat {
+    padding: 40px;
+    text-align: center;
+    position: relative;
+  }
+
+  .stat:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 20%; bottom: 20%;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .stat-value {
+    font-family: 'Instrument Serif', serif;
+    font-size: 42px;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+
+  .workflow-timeline {
+    margin-top: 12px;
+    position: relative;
+    padding-left: 48px;
+  }
+
+  .workflow-timeline::before {
+    content: '';
+    position: absolute;
+    left: 17px; top: 8px; bottom: 8px;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .workflow-step {
+    position: relative;
+    padding-bottom: 48px;
+  }
+
+  .workflow-step:last-child { padding-bottom: 0; }
+
+  .workflow-dot {
+    position: absolute;
+    left: -48px; top: 2px;
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Instrument Serif', serif;
+    font-size: 15px;
+    color: var(--accent);
+    z-index: 1;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+
+  .workflow-step h4 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .workflow-step p {
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.7;
+    max-width: 600px;
+  }
+
+  .stakeholder-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+
+  .stakeholder-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 40px;
+    transition: border-color 0.3s ease;
+  }
+
+  .stakeholder-card:hover {
+    border-color: var(--accent-dim);
+  }
+
+  .stakeholder-card h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .stakeholder-card p {
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .stakeholder-icon {
+    font-size: 28px;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .outcome-content {
+    max-width: 720px;
+  }
+
+  .outcome-content p {
+    color: var(--text-muted);
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 24px;
+  }
+
+  .highlight-box {
+    background: var(--surface);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 32px 36px;
+    margin: 32px 0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+
+  .highlight-box p {
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 0;
+  }
+
+  .back-bar {
+    padding: 40px 60px;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  .back-link svg {
+    width: 18px; height: 18px;
+  }
+
+  .back-link:hover { color: var(--accent); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 900px) {
+    .hero { padding: 60px 28px; }
+    section { padding: 72px 28px; }
+    section::after { left: 28px; right: 28px; }
+    .hero-meta { flex-wrap: wrap; gap: 24px; }
+    .agents-grid { grid-template-columns: 1fr; }
+    .stakeholder-grid { grid-template-columns: 1fr; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .stat:nth-child(2)::after { display: none; }
+    .back-bar { padding: 32px 28px; }
+  }
+
+  @media (max-width: 600px) {
+    .stats-bar { grid-template-columns: 1fr; }
+    .stat::after { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-label">Portfolio — Automation</div>
+  <h1>AI Agents Built on <em>Zapier</em></h1>
+  <p class="hero-summary">A collection of intelligent automations connecting Gmail, Google Drive, Sheets, OpenAI, Jira, Confluence, and Jira Product Discovery — designed to filter noise, structure work, and visualise roadmaps for different stakeholders.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span>Platform</span>
+      <span>Zapier</span>
+    </div>
+    <div class="hero-meta-item">
+      <span>AI Model</span>
+      <span>OpenAI GPT</span>
+    </div>
+    <div class="hero-meta-item">
+      <span>Integrations</span>
+      <span>7 Platforms</span>
+    </div>
+    <div class="hero-meta-item">
+      <span>Focus</span>
+      <span>Product & Ops Workflows</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="fade-in">
+    <div class="section-label">01 — Tech Stack</div>
+    <div class="section-title">Seven platforms wired into a <em>unified system</em></div>
+  </div>
+  <div class="integrations-grid fade-in">
+    <div class="integration-chip"><div class="chip-icon">✉</div> Gmail</div>
+    <div class="integration-chip"><div class="chip-icon">📁</div> Google Drive</div>
+    <div class="integration-chip"><div class="chip-icon">📊</div> Google Sheets</div>
+    <div class="integration-chip"><div class="chip-icon">◈</div> OpenAI GPT</div>
+    <div class="integration-chip"><div class="chip-icon">🔷</div> Jira</div>
+    <div class="integration-chip"><div class="chip-icon">📘</div> Confluence</div>
+    <div class="integration-chip"><div class="chip-icon">💡</div> Jira Product Discovery</div>
+  </div>
+
+  <div class="stats-bar fade-in">
+    <div class="stat">
+      <div class="stat-value">7</div>
+      <div class="stat-label">Platforms Connected</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">4</div>
+      <div class="stat-label">AI Agents Built</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">3</div>
+      <div class="stat-label">Stakeholder Views</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">E2E</div>
+      <div class="stat-label">Automated Pipeline</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="fade-in">
+    <div class="section-label">02 — The Agents</div>
+    <div class="section-title">Purpose-built automations for <em>filtering, structuring & visualising</em></div>
+  </div>
+  <div class="agents-grid fade-in">
+
+    <div class="agent-card">
+      <div class="agent-card-visual visual-filter">
+        <div class="visual-icon">🔍</div>
+        <div class="visual-label">Intake Filter</div>
+      </div>
+      <div class="agent-card-body">
+        <h3>Intake Filter Agent</h3>
+        <p>Monitors Gmail and Google Drive for incoming requests, feedback, and ideas. Uses GPT to classify, prioritise, and route items — cutting through noise so only actionable inputs surface.</p>
+        <div class="tag-row">
+          <span class="tag">Gmail</span>
+          <span class="tag">Google Drive</span>
+          <span class="tag">OpenAI GPT</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-card-visual visual-ticket">
+        <div class="visual-icon">🎫</div>
+        <div class="visual-label">Ticket Creator</div>
+      </div>
+      <div class="agent-card-body">
+        <h3>Ticket Creator Agent</h3>
+        <p>Generates well-structured Jira tickets from filtered inputs. Enriches descriptions with context from Confluence, assigns priority, and links to relevant epics automatically.</p>
+        <div class="tag-row">
+          <span class="tag">Jira</span>
+          <span class="tag">Confluence</span>
+          <span class="tag">OpenAI GPT</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-card-visual visual-roadmap">
+        <div class="visual-icon">🗺️</div>
+        <div class="visual-label">Roadmap Builder</div>
+      </div>
+      <div class="agent-card-body">
+        <h3>Roadmap Builder Agent</h3>
+        <p>Collates ideas and insights from Sheets, JPD, and Confluence into a unified view. Builds dynamic roadmaps tailored to different stakeholder audiences.</p>
+        <div class="tag-row">
+          <span class="tag">Google Sheets</span>
+          <span class="tag">Jira Product Discovery</span>
+          <span class="tag">Confluence</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-card-visual visual-aggregator">
+        <div class="visual-icon">📡</div>
+        <div class="visual-label">Idea Aggregator</div>
+      </div>
+      <div class="agent-card-body">
+        <h3>Idea Aggregator Agent</h3>
+        <p>Scans across platforms to capture scattered ideas, feature requests, and strategic inputs. Deduplicates, clusters related concepts, and maintains a living backlog for planning.</p>
+        <div class="tag-row">
+          <span class="tag">Gmail</span>
+          <span class="tag">Google Sheets</span>
+          <span class="tag">JPD</span>
+          <span class="tag">OpenAI GPT</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <div class="fade-in">
+    <div class="section-label">03 — How It Works</div>
+    <div class="section-title">From scattered inputs to <em>structured output</em></div>
+  </div>
+  <div class="workflow-timeline fade-in">
+    <div class="workflow-step">
+      <div class="workflow-dot">1</div>
+      <h4>Capture</h4>
+      <p>Emails, documents, spreadsheets, and ad-hoc ideas arrive across seven connected platforms throughout the day.</p>
+    </div>
+    <div class="workflow-step">
+      <div class="workflow-dot">2</div>
+      <h4>Filter & Classify</h4>
+      <p>GPT analyses each incoming item, tagging it by type, urgency, and relevance — routing actionable items forward and archiving noise.</p>
+    </div>
+    <div class="workflow-step">
+      <div class="workflow-dot">3</div>
+      <h4>Structure</h4>
+      <p>Jira tickets are created with enriched context from Confluence. Ideas are logged into Jira Product Discovery. Data flows into Sheets for tracking.</p>
+    </div>
+    <div class="workflow-step">
+      <div class="workflow-dot">4</div>
+      <h4>Visualise</h4>
+      <p>Roadmaps are generated from the unified data, tailored per stakeholder — executive summaries, engineering breakdowns, and product-centric views.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="fade-in">
+    <div class="section-label">04 — Stakeholder Views</div>
+    <div class="section-title">One source of truth, <em>many lenses</em></div>
+  </div>
+  <div class="stakeholder-grid fade-in">
+    <div class="stakeholder-card">
+      <span class="stakeholder-icon">👔</span>
+      <h3>Executive Leadership</h3>
+      <p>High-level strategic overview with business impact metrics, timeline milestones, and investment priorities — outcomes over implementation detail.</p>
+    </div>
+    <div class="stakeholder-card">
+      <span class="stakeholder-icon">🛠️</span>
+      <h3>Engineering Teams</h3>
+      <p>Technical roadmap with Jira-linked epics, dependency mapping, capacity considerations, and sprint-level breakdowns ready for planning.</p>
+    </div>
+    <div class="stakeholder-card">
+      <span class="stakeholder-icon">📈</span>
+      <h3>Product Managers</h3>
+      <p>Feature-centric view with user impact scoring, idea provenance tracking, and competitive context from aggregated discovery insights.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="fade-in">
+    <div class="section-label">05 — Outcome</div>
+    <div class="section-title">Turning operational chaos into <em>clarity</em></div>
+  </div>
+  <div class="outcome-content fade-in">
+    <p>These automations replaced a fragmented workflow where ideas, requests, and feedback were scattered across email threads, shared drives, and spreadsheets with no consistent path into planning.</p>
+    <div class="highlight-box">
+      <p>By connecting seven platforms through Zapier with GPT-powered classification, the system creates a continuous pipeline from raw input to structured, stakeholder-ready roadmaps — eliminating manual triage and ensuring nothing falls through the cracks.</p>
+    </div>
+    <p>The result is a living system where every idea has a traceable path from capture to roadmap, and each stakeholder sees exactly the view they need to make decisions.</p>
+  </div>
+</section>
+
+<div class="back-bar">
+  <a href="#" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Back to Portfolio
+  </a>
+</div>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

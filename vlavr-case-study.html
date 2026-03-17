@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VLAVR Global VR Ecosystem — Kenny Xu</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --cream: #f5f0e8;
+    --black: #0e0e0e;
+    --orange: #f5a623;
+    --muted: #6b6560;
+    --white: #ffffff;
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+  body { background: var(--cream); color: var(--black); font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    padding: 1.5rem 6rem;
+    display: flex; align-items: center; justify-content: space-between;
+    background: #fff; box-shadow: 0 1px 0 rgba(0,0,0,0.07);
+  }
+  .nav-logo { font-family:'Syne',sans-serif; font-weight:800; font-size:1.1rem; letter-spacing:-0.02em; color:var(--black); text-decoration:none; }
+  .nav-back { font-size:0.85rem; color:var(--muted); text-decoration:none; display:flex; align-items:center; gap:0.4rem; transition:color 0.2s; }
+  .nav-back:hover { color:var(--black); }
+
+  .case-hero { padding: 10rem 6rem 4rem; max-width: 900px; text-align: center; margin: 0 auto; }
+  .case-label { font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-bottom:1.5rem; }
+  .case-title { font-family:'Syne',sans-serif; font-size:clamp(1.6rem,3vw,2.5rem); font-weight:800; letter-spacing:-0.03em; line-height:1.1; margin-bottom:1.5rem; }
+  .case-subtitle { font-size:1.05rem; line-height:1.75; color:var(--muted); max-width:640px; font-weight:300; }
+
+  .case-meta { display:flex; flex-wrap:wrap; justify-content:center; border-top:1px solid rgba(0,0,0,0.08); border-bottom:1px solid rgba(0,0,0,0.08); background:white; }
+  .meta-item { padding:1.75rem 2.5rem; border-right:1px solid rgba(0,0,0,0.07); }
+  .meta-item:last-child { border-right:none; }
+  .meta-item label { font-size:0.63rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:0.35rem; }
+  .meta-item span { font-family:'Syne',sans-serif; font-weight:700; font-size:0.88rem; color:var(--black); }
+
+  .case-content { padding: 0 6rem; }
+
+  .case-section { margin:5rem 0; display:grid; grid-template-columns:220px 1fr; gap:4rem; align-items:start; }
+  .section-tag { font-size:0.68rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); padding-top:0.3rem; }
+
+  .body h2 { font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:700; letter-spacing:-0.02em; margin-bottom:1.1rem; }
+  .body p { font-size:0.93rem; line-height:1.8; color:var(--muted); font-weight:300; margin-bottom:1rem; }
+  .body p:last-child { margin-bottom:0; }
+
+  .sgrid { display:grid; gap:1.1rem; margin-top:1.5rem; }
+  .sgrid.c3 { grid-template-columns:repeat(3,1fr); }
+  .sgrid.c4 { grid-template-columns:repeat(4,1fr); }
+  .sgrid.c2 { grid-template-columns:repeat(2,1fr); }
+  .scard { background:white; border-radius:16px; padding:1.75rem 2rem; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+  .scard.dark { background:var(--black); }
+  .scard.orange { background:var(--orange); }
+  .snum { font-family:'Syne',sans-serif; font-size:2.1rem; font-weight:800; letter-spacing:-0.04em; color:var(--black); line-height:1.1; margin-bottom:0.4rem; }
+  .scard.dark .snum { color:white; }
+  .scard.orange .snum { color:white; }
+  .snum em { color:var(--orange); font-style:normal; }
+  .scard.dark .snum em { color:#ffd166; }
+  .slabel { font-size:0.78rem; line-height:1.5; color:var(--muted); font-weight:300; }
+  .scard.dark .slabel { color:rgba(255,255,255,0.5); }
+  .scard.orange .slabel { color:rgba(255,255,255,0.8); }
+
+  .callout { background:white; border-radius:16px; padding:2rem 2.5rem; border-left:4px solid var(--orange); margin:1.75rem 0; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+  .callout p { font-size:1rem !important; color:var(--black) !important; font-style:italic; font-weight:400 !important; line-height:1.75 !important; margin:0 !important; }
+
+  .checklist { display:flex; flex-direction:column; gap:0.65rem; margin-top:1.25rem; }
+  .ci { display:flex; align-items:flex-start; gap:0.75rem; font-size:0.9rem; line-height:1.65; color:var(--muted); font-weight:300; }
+  .ci-dot { flex-shrink:0; width:20px; height:20px; background:var(--orange); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.58rem; font-weight:800; margin-top:0.18rem; }
+
+  .pillars { display:grid; grid-template-columns:repeat(3,1fr); gap:1.1rem; margin-top:1.5rem; }
+  .pillar { background:white; border-radius:16px; padding:1.75rem; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+  .pillar h4 { font-family:'Syne',sans-serif; font-size:0.87rem; font-weight:700; margin-bottom:0.85rem; color:var(--black); }
+  .pillar ul { list-style:none; display:flex; flex-direction:column; gap:0.45rem; }
+  .pillar li { font-size:0.82rem; line-height:1.55; color:var(--muted); font-weight:300; padding-left:0.9rem; position:relative; }
+  .pillar li::before { content:'–'; position:absolute; left:0; color:var(--orange); }
+
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:1.1rem; margin-top:1.5rem; }
+  .tc { background:white; border-radius:16px; padding:1.75rem; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+  .tc h4 { font-family:'Syne',sans-serif; font-size:0.87rem; font-weight:700; margin-bottom:0.85rem; color:var(--black); }
+  .tc ul { list-style:none; display:flex; flex-direction:column; gap:0.45rem; }
+  .tc li { font-size:0.82rem; line-height:1.55; color:var(--muted); font-weight:300; padding-left:0.9rem; position:relative; }
+  .tc li::before { content:'–'; position:absolute; left:0; color:var(--orange); }
+
+  .partner-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.1rem; margin-top:1.5rem; }
+  .partner-card { background:white; border-radius:16px; padding:2rem; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; flex-direction:column; gap:0.75rem; }
+  .partner-card h4 { font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; color:var(--black); display:flex; align-items:center; gap:0.6rem; }
+  .partner-card h4 .partner-dot { width:8px; height:8px; border-radius:50%; background:var(--orange); flex-shrink:0; }
+  .partner-card p { font-size:0.84rem; line-height:1.65; color:var(--muted); font-weight:300; }
+
+  .eco-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.6rem; margin-top:1.25rem; }
+  .eco-chip { background:white; border-radius:10px; padding:0.8rem 1.1rem; font-size:0.82rem; color:var(--black); font-weight:400; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; gap:0.5rem; }
+  .eco-chip::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--orange); flex-shrink:0; }
+
+  .tag-row { display:flex; flex-wrap:wrap; gap:0.55rem; margin-top:1.25rem; }
+  .tag { background:rgba(0,0,0,0.06); border-radius:100px; padding:0.32rem 0.85rem; font-size:0.76rem; color:var(--black); font-weight:500; }
+  .tag.hi { background:var(--orange); color:white; }
+
+  .timeline { margin-top:1.5rem; }
+  .tl-item { display:grid; grid-template-columns:80px 1fr; gap:1.5rem; padding:1.25rem 0; border-bottom:1px solid rgba(0,0,0,0.06); }
+  .tl-item:last-child { border-bottom:none; }
+  .tl-phase { font-family:'Syne',sans-serif; font-size:0.72rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--orange); padding-top:0.15rem; }
+  .tl-body h4 { font-family:'Syne',sans-serif; font-size:0.9rem; font-weight:700; margin-bottom:0.35rem; color:var(--black); }
+  .tl-body p { font-size:0.82rem; line-height:1.6; color:var(--muted); font-weight:300; margin:0; }
+
+  .divider { height:1px; background:rgba(0,0,0,0.07); margin:5rem 6rem; }
+
+  .case-footer { padding:4rem 6rem 6rem; display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(0,0,0,0.07); }
+  .fl { font-size:0.68rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); margin-bottom:0.45rem; }
+  .fp { font-family:'Syne',sans-serif; font-weight:700; font-size:1.05rem; color:var(--black); text-decoration:none; }
+  .fp:hover { color:var(--orange); }
+
+  @media (max-width:900px) {
+    nav { padding:1.25rem 1.5rem; }
+    .case-hero { padding:8rem 1.5rem 3rem; }
+    .case-meta { flex-wrap:wrap; }
+    .case-content { padding:0 1.5rem; }
+    .case-section { grid-template-columns:1fr; gap:1rem; }
+    .sgrid.c3,.sgrid.c4 { grid-template-columns:repeat(2,1fr); }
+    .pillars { grid-template-columns:1fr; }
+    .two-col { grid-template-columns:1fr; }
+    .partner-grid { grid-template-columns:1fr; }
+    .eco-grid { grid-template-columns:1fr 1fr; }
+    .divider { margin:3rem 1.5rem; }
+    .case-footer { padding:3rem 1.5rem 4rem; flex-direction:column; gap:2rem; align-items:flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">KX</a>
+  <a href="#" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 7H2M7 2L2 7l5 5"/></svg>
+    Back to Work
+  </a>
+</nav>
+
+<div class="case-hero">
+  <div class="case-label">Case Study &nbsp;·&nbsp; VLAVR, Shanghai</div>
+  <h1 class="case-title">Building a Global VR<br>Ecosystem from Scratch</h1>
+  <p class="case-subtitle" style="margin:0 auto;">Leading business development and partnerships for the world's first 6DOF AR/VR glasses — securing Qualcomm and Ericsson within 6 months and driving the go-to-market strategy across hardware, software and content verticals.</p>
+</div>
+
+<div class="case-meta">
+  <div class="meta-item"><label>Company</label><span>VLAVR</span></div>
+  <div class="meta-item"><label>Location</label><span>Shanghai, China</span></div>
+  <div class="meta-item"><label>Period</label><span>2019 – 2020</span></div>
+  <div class="meta-item"><label>Role</label><span>Business Development & PM</span></div>
+  <div class="meta-item"><label>Team</label><span>7 People Managed</span></div>
+</div>
+
+<div class="case-content">
+
+  <div class="case-section">
+    <div class="section-tag">Overview</div>
+    <div class="body">
+      <h2>The world's first 6DOF glasses</h2>
+      <p>VLAVR was building the world's first consumer 6DOF (six degrees of freedom) AR/VR glasses — a lightweight, standalone headset with myopia adjustment and flexible temple design. The product targeted both consumer and enterprise markets, but needed a robust ecosystem of partners to reach commercial viability.</p>
+      <p>I joined to lead business development and project management, tasked with building the partnerships, ecosystem, and go-to-market strategy needed to take the hardware from prototype to global product.</p>
+      <div class="sgrid c3" style="margin-top:1.5rem;">
+        <div class="scard orange">
+          <div class="snum">2</div>
+          <div class="slabel">Major partners secured in 6 months</div>
+        </div>
+        <div class="scard orange">
+          <div class="snum">MWC 2020</div>
+          <div class="slabel">Ericsson exhibition showcase secured</div>
+        </div>
+        <div class="scard orange">
+          <div class="snum">7</div>
+          <div class="slabel">Team members managed (in-house & external)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-section">
+    <div class="section-tag">Key Contributions</div>
+    <div class="body">
+      <h2>What I delivered</h2>
+      <p>Across business development, project management, and QA leadership — these were the core contributions I made during my time at VLAVR.</p>
+      <div class="checklist">
+        <div class="ci"><div class="ci-dot">✓</div>Secured 2 major partners — Qualcomm and Ericsson — within the first 6 months</div>
+        <div class="ci"><div class="ci-dot">✓</div>Project managed the Ericsson partnership to showcase at MWC 2020, the world's largest mobile exhibition</div>
+        <div class="ci"><div class="ci-dot">✓</div>Led business development by securing partnerships with vendors dominating 5G and cloud operations, as well as hardware/software vendors to build the VR ecosystem</div>
+        <div class="ci"><div class="ci-dot">✓</div>Brought on collaborations with complementary products — controllers, smartphones, and content — to expand the ecosystem</div>
+        <div class="ci"><div class="ci-dot">✓</div>Built marketing and go-to-market plans by analysing smartphone market sales data and translating data into customer insights</div>
+        <div class="ci"><div class="ci-dot">✓</div>Managed project scope and requirements documentation across multiple workstreams</div>
+        <div class="ci"><div class="ci-dot">✓</div>QA'd all project deliverables by managing and hiring a team of 7 people in-house and externally</div>
+        <div class="ci"><div class="ci-dot">✓</div>Worked cross-functionally to ensure product requirements were captured and communicated, mitigating risks and issues</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-section">
+    <div class="section-tag">Partnerships</div>
+    <div class="body">
+      <h2>Building the partner network</h2>
+      <p>The VR glasses needed a full ecosystem to succeed — from chipsets and connectivity to content and peripherals. Securing the right partners in the right order was critical to market credibility and product viability.</p>
+      <div class="partner-grid">
+        <div class="partner-card">
+          <h4><span class="partner-dot"></span> Qualcomm</h4>
+          <p>Partnered with Qualcomm to integrate their XR chipset platform, providing the processing power and reference design needed for a standalone 6DOF headset at consumer scale.</p>
+          <div class="tag-row" style="margin-top:0.5rem;">
+            <span class="tag hi">XR Chipset</span>
+            <span class="tag">Hardware</span>
+            <span class="tag">5G Ready</span>
+          </div>
+        </div>
+        <div class="partner-card">
+          <h4><span class="partner-dot"></span> Ericsson</h4>
+          <p>Secured a partnership with Ericsson for 5G connectivity and cloud rendering — enabling low-latency streaming experiences and leading to a joint exhibition at Mobile World Congress 2020.</p>
+          <div class="tag-row" style="margin-top:0.5rem;">
+            <span class="tag hi">5G / Cloud</span>
+            <span class="tag">MWC 2020</span>
+            <span class="tag">Exhibition</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-section">
+    <div class="section-tag">Ecosystem</div>
+    <div class="body">
+      <h2>VR ecosystem development</h2>
+      <p>Beyond the core hardware partners, I worked to build out the broader ecosystem of complementary products and integrations that would make the VLAVR glasses a viable platform — not just a device.</p>
+      <div class="eco-grid">
+        <div class="eco-chip">6DOF Controllers</div>
+        <div class="eco-chip">Smartphone Pairing</div>
+        <div class="eco-chip">VR Content Library</div>
+        <div class="eco-chip">5G Connectivity</div>
+        <div class="eco-chip">Cloud Rendering</div>
+        <div class="eco-chip">Enterprise Apps</div>
+        <div class="eco-chip">SDK for Developers</div>
+        <div class="eco-chip">Streaming Platform</div>
+        <div class="eco-chip">Peripheral Hardware</div>
+      </div>
+      <div class="callout" style="margin-top:1.75rem;">
+        <p>"The goal was to ensure VLAVR wasn't just selling a headset — it was offering a complete platform with content, connectivity and companion devices that made the experience compelling from day one."</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-section">
+    <div class="section-tag">Go-to-Market</div>
+    <div class="body">
+      <h2>Market analysis & GTM planning</h2>
+      <p>I built the go-to-market strategy from the ground up — analysing smartphone market sales data, identifying cross-over consumer segments, and translating those insights into positioning, pricing, and channel strategy for the VR glasses.</p>
+      <div class="pillars">
+        <div class="pillar">
+          <h4>Market Research</h4>
+          <ul>
+            <li>Smartphone sales data analysis</li>
+            <li>Consumer segment identification</li>
+            <li>Competitor landscape mapping</li>
+            <li>Pricing model development</li>
+          </ul>
+        </div>
+        <div class="pillar">
+          <h4>Channel Strategy</h4>
+          <ul>
+            <li>Distribution partner outreach</li>
+            <li>Exhibition & event planning</li>
+            <li>MWC 2020 showcase with Ericsson</li>
+            <li>Sales enablement materials</li>
+          </ul>
+        </div>
+        <div class="pillar">
+          <h4>Brand Positioning</h4>
+          <ul>
+            <li>Marketing asset development</li>
+            <li>Product messaging framework</li>
+            <li>Customer insight translation</li>
+            <li>Audience targeting strategy</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-section">
+    <div class="section-tag">Project Management</div>
+    <div class="body">
+      <h2>Scope, QA & cross-functional delivery</h2>
+      <p>Beyond partnerships and GTM, I managed the end-to-end delivery of project workstreams — from scope definition and requirements documentation through to QA and stakeholder communication.</p>
+      <div class="two-col">
+        <div class="tc">
+          <h4>Delivery & QA</h4>
+          <ul>
+            <li>Managed and hired a team of 7 (in-house + external)</li>
+            <li>QA'd all project deliverables across workstreams</li>
+            <li>Requirements documentation and scope management</li>
+            <li>Ensured quality standards across partner deliverables</li>
+          </ul>
+        </div>
+        <div class="tc">
+          <h4>Cross-functional Coordination</h4>
+          <ul>
+            <li>Captured and communicated product requirements</li>
+            <li>Mitigated risks and issues across teams</li>
+            <li>Aligned engineering, design, and business teams</li>
+            <li>Coordinated with external vendors and partners</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-section">
+    <div class="section-tag">Impact</div>
+    <div class="body">
+      <h2>What it all added up to</h2>
+      <p>In under a year, VLAVR went from an early-stage hardware startup to a company with credible partnerships and a clear path to market — backed by the two biggest names in mobile connectivity and processing.</p>
+      <div class="sgrid c2" style="margin-top:1.25rem;">
+        <div class="scard dark">
+          <div class="snum"><em>Qualcomm</em> + <em>Ericsson</em></div>
+          <div class="slabel">Two tier-1 partners secured within 6 months of joining</div>
+        </div>
+        <div class="scard dark">
+          <div class="snum"><em>MWC 2020</em></div>
+          <div class="slabel">Showcase secured at the world's largest mobile exhibition</div>
+        </div>
+      </div>
+      <div class="sgrid c3" style="margin-top:1.1rem;">
+        <div class="scard">
+          <div class="snum"><em>7</em></div>
+          <div class="slabel">Team members managed across QA and delivery</div>
+        </div>
+        <div class="scard">
+          <div class="snum"><em>5G</em></div>
+          <div class="slabel">Cloud rendering partnership enabled via Ericsson</div>
+        </div>
+        <div class="scard">
+          <div class="snum"><em>9+</em></div>
+          <div class="slabel">Ecosystem verticals developed for the platform</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="divider"></div>
+
+<div class="case-footer">
+  <div>
+    <div class="fl">Previous Project</div>
+    <a href="#" class="fp">← Back to Work</a>
+  </div>
+  <div style="text-align:right">
+    <div class="fl">Next Project</div>
+    <a href="#" class="fp">COZO Intelligence Platform →</a>
+  </div>
+</div>
+
+</body>
+</html>

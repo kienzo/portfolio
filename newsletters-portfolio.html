@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Newsletters Platform — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0c;
+    --paper: #f4f1eb;
+    --cream: #ece8df;
+    --warm: #d4cec3;
+    --accent: #c44b2b;
+    --accent-glow: #e8603e;
+    --teal: #1a6b5a;
+    --teal-light: #2a8b74;
+    --blue: #2b5fc4;
+    --muted: #6b6560;
+    --border: #c8c2b8;
+    --code-bg: #1b1b20;
+    --code-fg: #e0ddd6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    z-index: 9999;
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s cubic-bezier(0.23, 1, 0.32, 1), transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 20px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(16px);
+    background: rgba(244, 241, 235, 0.85);
+    border-bottom: 1px solid var(--border);
+  }
+  nav .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  nav .logo span { color: var(--accent); }
+  nav .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+  nav .nav-links a {
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: color 0.3s;
+  }
+  nav .nav-links a:hover { color: var(--ink); }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 140px 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px;
+    right: -200px;
+    width: 700px;
+    height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(196,75,43,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--accent);
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    max-width: 900px;
+    margin-bottom: 32px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero-sub {
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--muted);
+    max-width: 560px;
+    margin-bottom: 48px;
+  }
+
+  .stats-strip {
+    display: flex;
+    gap: 56px;
+    padding-top: 48px;
+    border-top: 1px solid var(--border);
+    max-width: 700px;
+  }
+  .stat-item .stat-number {
+    font-family: 'DM Serif Display', serif;
+    font-size: 42px;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .stat-item .stat-label {
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  section { padding: 100px 48px; }
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+    max-width: 700px;
+  }
+  .section-desc {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--muted);
+    max-width: 600px;
+    margin-bottom: 56px;
+  }
+
+  .platform-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    max-width: 1100px;
+  }
+  .platform-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.23,1,0.32,1), box-shadow 0.4s;
+  }
+  .platform-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 48px rgba(10,10,12,0.06);
+  }
+  .platform-card.featured {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    background: var(--ink);
+    color: var(--paper);
+    border-color: transparent;
+  }
+  .platform-card.featured .card-label { color: var(--accent-glow); }
+  .platform-card.featured .card-desc { color: rgba(244,241,235,0.6); }
+  .card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    font-size: 22px;
+  }
+  .card-icon.sf { background: rgba(0,112,210,0.1); color: #0070d2; }
+  .card-icon.ai { background: rgba(196,75,43,0.1); color: var(--accent); }
+  .card-icon.ad { background: rgba(26,107,90,0.1); color: var(--teal); }
+  .card-icon.data { background: rgba(43,95,196,0.1); color: var(--blue); }
+  .card-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .card-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .architecture-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-self: center;
+  }
+  .arch-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .arch-node {
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .arch-node.sfmc { background: rgba(0,112,210,0.15); color: #5ab3ff; }
+  .arch-node.claude { background: rgba(196,75,43,0.2); color: var(--accent-glow); }
+  .arch-node.gemini { background: rgba(66,133,244,0.15); color: #8ab4f8; }
+  .arch-node.gam { background: rgba(26,107,90,0.2); color: #4fd1b0; }
+  .arch-node.data { background: rgba(255,255,255,0.08); color: rgba(244,241,235,0.7); }
+  .arch-arrow {
+    color: rgba(244,241,235,0.2);
+    font-size: 16px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .workflow-section {
+    background: var(--cream);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .workflow-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    max-width: 1100px;
+  }
+  .workflow-step {
+    background: white;
+    padding: 40px 32px;
+    position: relative;
+  }
+  .workflow-step::before {
+    content: attr(data-step);
+    font-family: 'DM Serif Display', serif;
+    font-size: 64px;
+    color: rgba(10,10,12,0.04);
+    position: absolute;
+    top: 16px;
+    right: 24px;
+    line-height: 1;
+  }
+  .step-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-bottom: 20px;
+  }
+  .step-badge.claude-badge { background: rgba(196,75,43,0.1); color: var(--accent); }
+  .step-badge.gemini-badge { background: rgba(66,133,244,0.1); color: #4285f4; }
+  .step-badge.sfmc-badge { background: rgba(0,112,210,0.1); color: #0070d2; }
+  .step-badge .badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .step-badge.claude-badge .badge-dot { background: var(--accent); }
+  .step-badge.gemini-badge .badge-dot { background: #4285f4; }
+  .step-badge.sfmc-badge .badge-dot { background: #0070d2; }
+  .step-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .step-desc {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .step-metric {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .step-metric .metric-val {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--ink);
+  }
+  .step-metric .metric-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .ai-tools-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    max-width: 1100px;
+  }
+  .tool-card {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    background: white;
+    transition: transform 0.4s cubic-bezier(0.23,1,0.32,1);
+  }
+  .tool-card:hover { transform: translateY(-3px); }
+  .tool-header {
+    padding: 32px 32px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .tool-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: -0.02em;
+  }
+  .tool-logo.claude-logo {
+    background: linear-gradient(135deg, #c44b2b, #e8603e);
+    color: white;
+  }
+  .tool-logo.gemini-logo {
+    background: linear-gradient(135deg, #4285f4, #34a853);
+    color: white;
+  }
+  .tool-header-text h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+  }
+  .tool-header-text span {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .tool-body { padding: 0 32px 32px; }
+  .tool-use-case {
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(200,194,184,0.5);
+  }
+  .tool-use-case:last-child { border-bottom: none; }
+  .use-case-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .use-case-title::before {
+    content: '→';
+    color: var(--accent);
+    font-weight: 400;
+  }
+  .use-case-desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--muted);
+    padding-left: 22px;
+  }
+
+  .prompt-showcase {
+    max-width: 1100px;
+    margin-top: 48px;
+  }
+  .prompt-window {
+    background: var(--code-bg);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 32px 64px rgba(10,10,12,0.15);
+  }
+  .prompt-bar {
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .prompt-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .prompt-dot:nth-child(1) { background: #ff5f57; }
+  .prompt-dot:nth-child(2) { background: #febc2e; }
+  .prompt-dot:nth-child(3) { background: #28c840; }
+  .prompt-bar-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    margin-left: 12px;
+  }
+  .prompt-body {
+    padding: 28px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--code-fg);
+  }
+  .prompt-body .comment { color: rgba(255,255,255,0.25); }
+  .prompt-body .highlight { color: var(--accent-glow); }
+  .prompt-body .teal { color: #4fd1b0; }
+  .prompt-body .blue { color: #8ab4f8; }
+
+  .impact-section { background: var(--ink); color: var(--paper); }
+  .impact-section .section-label { color: var(--accent-glow); }
+  .impact-section .section-desc { color: rgba(244,241,235,0.5); }
+  .impact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    max-width: 1100px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .impact-card {
+    background: var(--ink);
+    padding: 48px 36px;
+    text-align: center;
+    transition: background 0.3s;
+  }
+  .impact-card:hover { background: rgba(255,255,255,0.03); }
+  .impact-val {
+    font-family: 'DM Serif Display', serif;
+    font-size: 48px;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .impact-val.revenue { color: var(--accent-glow); }
+  .impact-val.speed { color: #4fd1b0; }
+  .impact-val.reach { color: #8ab4f8; }
+  .impact-label {
+    font-size: 13px;
+    color: rgba(244,241,235,0.45);
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  .partners-strip {
+    display: flex;
+    gap: 48px;
+    align-items: center;
+    padding-top: 56px;
+    margin-top: 56px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    max-width: 1100px;
+    flex-wrap: wrap;
+  }
+  .partner-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: rgba(244,241,235,0.3);
+    width: 100%;
+    margin-bottom: -16px;
+  }
+  .partner-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: rgba(244,241,235,0.35);
+    transition: color 0.3s;
+    cursor: default;
+  }
+  .partner-name:hover { color: rgba(244,241,235,0.7); }
+
+  .stack-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-width: 1100px;
+  }
+  .stack-pill {
+    padding: 10px 20px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    background: white;
+    transition: all 0.3s;
+    cursor: default;
+  }
+  .stack-pill:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(196,75,43,0.04);
+  }
+  .stack-pill.primary {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  .stack-pill.primary:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  footer {
+    padding: 48px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  footer .foot-left {
+    font-family: 'DM Serif Display', serif;
+    font-size: 16px;
+    color: var(--muted);
+  }
+  footer .foot-right {
+    font-size: 12px;
+    color: var(--warm);
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    nav .nav-links { display: none; }
+    section, .hero { padding-left: 24px; padding-right: 24px; }
+    .platform-grid, .ai-tools-grid, .workflow-grid, .impact-grid {
+      grid-template-columns: 1fr;
+    }
+    .platform-card.featured { grid-template-columns: 1fr; }
+    .stats-strip { flex-wrap: wrap; gap: 32px; }
+    .partners-strip { gap: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">kenny<span>.</span>xu</div>
+  <ul class="nav-links">
+    <li><a href="#platform">Platform</a></li>
+    <li><a href="#workflow">AI Workflow</a></li>
+    <li><a href="#tools">Tools</a></li>
+    <li><a href="#impact">Impact</a></li>
+    <li><a href="#stack">Stack</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow reveal">Case Study</div>
+  <h1 class="reveal">Newsletters <em>Platform</em></h1>
+  <p class="hero-sub reveal">
+    Led a major transformation of Salesforce Marketing Cloud — introducing AI-assisted creation, automated ad serving, and personalised content delivery to millions of readers.
+  </p>
+  <div class="stats-strip reveal">
+    <div class="stat-item">
+      <div class="stat-number">$1M+</div>
+      <div class="stat-label">Incremental Revenue</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">60%</div>
+      <div class="stat-label">Faster Workflows</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">Millions</div>
+      <div class="stat-label">Readers Reached</div>
+    </div>
+  </div>
+</section>
+
+<section id="platform">
+  <div class="section-label reveal">Platform Overview</div>
+  <h2 class="section-title reveal">Rebuilding the newsletters engine from the ground up</h2>
+  <p class="section-desc reveal">
+    Partnering with editorial, commercial, and data teams to modernise how newsletters are created, monetised, and measured — powered by Salesforce Marketing Cloud and AI.
+  </p>
+
+  <div class="platform-grid">
+    <div class="platform-card featured reveal">
+      <div>
+        <div class="card-label">System Architecture</div>
+        <div class="card-title">End-to-End Platform</div>
+        <div class="card-desc">
+          Orchestrating Salesforce Marketing Cloud, AI content engines, Google Ad Manager, and real-time analytics into a seamless editorial pipeline — from content creation through to reader inboxes.
+        </div>
+      </div>
+      <div class="architecture-visual">
+        <div class="arch-row">
+          <div class="arch-node sfmc">SFMC</div>
+          <span class="arch-arrow">→</span>
+          <div class="arch-node claude">Claude AI</div>
+          <span class="arch-arrow">→</span>
+          <div class="arch-node data">Content Engine</div>
+        </div>
+        <div class="arch-row" style="padding-left: 24px;">
+          <div class="arch-node gemini">Gemini</div>
+          <span class="arch-arrow">→</span>
+          <div class="arch-node data">Editorial QA</div>
+          <span class="arch-arrow">→</span>
+          <div class="arch-node sfmc">SFMC Send</div>
+        </div>
+        <div class="arch-row" style="padding-left: 48px;">
+          <div class="arch-node gam">Google Ad Mgr</div>
+          <span class="arch-arrow">→</span>
+          <div class="arch-node data">Analytics</div>
+        </div>
+        <div class="arch-row" style="padding-left: 12px;">
+          <div class="arch-node data">Rec Engine</div>
+          <span class="arch-arrow">→</span>
+          <div class="arch-node data">Personalisation</div>
+          <span class="arch-arrow">→</span>
+          <div class="arch-node sfmc">Delivery</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="platform-card reveal">
+      <div class="card-icon sf">☁</div>
+      <div class="card-label">Salesforce Marketing Cloud</div>
+      <div class="card-title">Newsletter Delivery Engine</div>
+      <div class="card-desc">
+        Architected SFMC as the core delivery platform — managing audience segmentation, send orchestration, dynamic content blocks, and subscriber lifecycle across millions of contacts.
+      </div>
+    </div>
+
+    <div class="platform-card reveal">
+      <div class="card-icon ai">✦</div>
+      <div class="card-label">AI Integration</div>
+      <div class="card-title">Intelligent Content Creation</div>
+      <div class="card-desc">
+        Embedded Claude and Gemini into editorial workflows for headline generation, copy assistance, subject line optimisation, and content summarisation — reducing manual effort dramatically.
+      </div>
+    </div>
+
+    <div class="platform-card reveal">
+      <div class="card-icon ad">$</div>
+      <div class="card-label">CAPEX Initiative</div>
+      <div class="card-title">Automated Ad Serving</div>
+      <div class="card-desc">
+        Leading integration of Google Ad Manager for automated ad insertion — securing major campaigns with Harvey Norman, The Good Guys, and Deloitte, forecast to deliver $1M+ in new revenue.
+      </div>
+    </div>
+
+    <div class="platform-card reveal">
+      <div class="card-icon data">◈</div>
+      <div class="card-label">Data & Personalisation</div>
+      <div class="card-title">Behaviour-Driven Content</div>
+      <div class="card-desc">
+        Rolling out recommendation engines and relevance models to deliver AI-curated newsletters — tailoring content to individual reader behaviour and preferences at scale.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="workflow" class="workflow-section">
+  <div class="section-label reveal">AI-Powered Workflow</div>
+  <h2 class="section-title reveal">How Claude &amp; Gemini accelerate editorial</h2>
+  <p class="section-desc reveal">
+    A streamlined pipeline where AI handles the heavy lifting — from content generation to quality assurance — so editorial teams can focus on storytelling and strategy.
+  </p>
+
+  <div class="workflow-grid">
+    <div class="workflow-step reveal" data-step="01">
+      <div class="step-badge claude-badge"><span class="badge-dot"></span> Claude</div>
+      <div class="step-title">Content Drafting</div>
+      <div class="step-desc">
+        Claude generates newsletter copy from editorial briefs — producing headlines, summaries, and body content tuned to brand voice and audience segments. Editors refine rather than create from scratch.
+      </div>
+      <div class="step-metric">
+        <span class="metric-val">3×</span>
+        <span class="metric-label">faster first drafts</span>
+      </div>
+    </div>
+
+    <div class="workflow-step reveal" data-step="02">
+      <div class="step-badge gemini-badge"><span class="badge-dot"></span> Gemini</div>
+      <div class="step-title">Subject Line Optimisation</div>
+      <div class="step-desc">
+        Gemini generates and scores subject line variants using engagement data — predicting open rates and suggesting the highest-performing options for A/B testing in SFMC.
+      </div>
+      <div class="step-metric">
+        <span class="metric-val">+18%</span>
+        <span class="metric-label">open rate lift</span>
+      </div>
+    </div>
+
+    <div class="workflow-step reveal" data-step="03">
+      <div class="step-badge claude-badge"><span class="badge-dot"></span> Claude</div>
+      <div class="step-title">Content QA & Compliance</div>
+      <div class="step-desc">
+        Claude reviews final content for tone consistency, factual accuracy flags, link validation, and brand guideline compliance — catching issues before they reach millions of readers.
+      </div>
+      <div class="step-metric">
+        <span class="metric-val">85%</span>
+        <span class="metric-label">fewer revision cycles</span>
+      </div>
+    </div>
+
+    <div class="workflow-step reveal" data-step="04">
+      <div class="step-badge sfmc-badge"><span class="badge-dot"></span> SFMC</div>
+      <div class="step-title">Dynamic Assembly</div>
+      <div class="step-desc">
+        SFMC dynamically assembles personalised newsletter variants using AI-generated content blocks, audience segments, and Google Ad Manager placements — all automated at send time.
+      </div>
+      <div class="step-metric">
+        <span class="metric-val">12+</span>
+        <span class="metric-label">content variants per send</span>
+      </div>
+    </div>
+
+    <div class="workflow-step reveal" data-step="05">
+      <div class="step-badge gemini-badge"><span class="badge-dot"></span> Gemini</div>
+      <div class="step-title">Performance Analysis</div>
+      <div class="step-desc">
+        Gemini processes engagement data post-send — surfacing insights on content performance, segment behaviour, and trend signals that feed back into the next editorial cycle.
+      </div>
+      <div class="step-metric">
+        <span class="metric-val">Real-time</span>
+        <span class="metric-label">feedback loops</span>
+      </div>
+    </div>
+
+    <div class="workflow-step reveal" data-step="06">
+      <div class="step-badge claude-badge"><span class="badge-dot"></span> Claude</div>
+      <div class="step-title">Analytics Narrative</div>
+      <div class="step-desc">
+        Claude transforms raw dashboard metrics into plain-language reports for editorial and commercial stakeholders — making data accessible and actionable without analyst bottlenecks.
+      </div>
+      <div class="step-metric">
+        <span class="metric-val">Weekly</span>
+        <span class="metric-label">auto-generated briefs</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tools">
+  <div class="section-label reveal">AI Tool Stack</div>
+  <h2 class="section-title reveal">Claude &amp; Gemini — different strengths, one pipeline</h2>
+  <p class="section-desc reveal">
+    Each AI model is deployed where its capabilities are strongest — Claude for nuanced writing and reasoning, Gemini for data processing and multimodal analysis.
+  </p>
+
+  <div class="ai-tools-grid">
+    <div class="tool-card reveal">
+      <div class="tool-header">
+        <div class="tool-logo claude-logo">C</div>
+        <div class="tool-header-text">
+          <h3>Claude</h3>
+          <span>by Anthropic</span>
+        </div>
+      </div>
+      <div class="tool-body">
+        <div class="tool-use-case">
+          <div class="use-case-title">Newsletter Copy Generation</div>
+          <div class="use-case-desc">Drafts newsletter sections from editorial briefs, maintaining brand voice consistency across different newsletter products and audience segments.</div>
+        </div>
+        <div class="tool-use-case">
+          <div class="use-case-title">Content QA & Compliance</div>
+          <div class="use-case-desc">Reviews drafts for tone, accuracy, broken links, and adherence to editorial guidelines — reducing human review cycles by 85%.</div>
+        </div>
+        <div class="tool-use-case">
+          <div class="use-case-title">Analytics Narratives</div>
+          <div class="use-case-desc">Converts complex dashboard data into weekly performance briefs that editorial and commercial teams can immediately act on.</div>
+        </div>
+        <div class="tool-use-case">
+          <div class="use-case-title">Personalisation Logic</div>
+          <div class="use-case-desc">Helps design and iterate on recommendation engine rules — translating business requirements into content relevance scoring models.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool-card reveal">
+      <div class="tool-header">
+        <div class="tool-logo gemini-logo">G</div>
+        <div class="tool-header-text">
+          <h3>Gemini</h3>
+          <span>by Google</span>
+        </div>
+      </div>
+      <div class="tool-body">
+        <div class="tool-use-case">
+          <div class="use-case-title">Subject Line Optimisation</div>
+          <div class="use-case-desc">Generates and scores hundreds of subject line variants, predicting open-rate performance to maximise SFMC A/B test effectiveness.</div>
+        </div>
+        <div class="tool-use-case">
+          <div class="use-case-title">Engagement Data Analysis</div>
+          <div class="use-case-desc">Processes large-scale click, open, and conversion data — identifying content performance patterns and segment behaviour trends.</div>
+        </div>
+        <div class="tool-use-case">
+          <div class="use-case-title">Image & Asset Review</div>
+          <div class="use-case-desc">Multimodal analysis of newsletter imagery for brand consistency, accessibility compliance, and visual quality before send.</div>
+        </div>
+        <div class="tool-use-case">
+          <div class="use-case-title">Competitive Intelligence</div>
+          <div class="use-case-desc">Analyses competitor newsletter formats, frequency, and content strategies — surfacing opportunities for differentiation and growth.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prompt-showcase reveal">
+    <div class="prompt-window">
+      <div class="prompt-bar">
+        <div class="prompt-dot"></div>
+        <div class="prompt-dot"></div>
+        <div class="prompt-dot"></div>
+        <span class="prompt-bar-title">claude — editorial-workflow.prompt</span>
+      </div>
+      <div class="prompt-body">
+        <span class="comment">// Example: AI-assisted newsletter brief → draft pipeline</span><br><br>
+        <span class="highlight">System:</span> You are a newsletter content specialist for [Brand].<br>
+        Maintain our editorial voice: authoritative, warm, concise.<br><br>
+        <span class="highlight">User:</span> Generate a newsletter draft from this brief:<br>
+        <span class="teal">- Topic:</span> Federal Budget Impact on Housing<br>
+        <span class="teal">- Audience:</span> Property investors, 35-55 demographic<br>
+        <span class="teal">- Tone:</span> Informative, actionable<br>
+        <span class="teal">- Sections:</span> Hero summary, 3 key takeaways, CTA<br><br>
+        <span class="comment">// Claude generates draft → Editor refines → SFMC assembles</span><br>
+        <span class="comment">// Total time: ~15 min (was 90+ min manual)</span><br><br>
+        <span class="blue">→ Output piped to SFMC Content Builder via API</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="impact" class="impact-section">
+  <div class="section-label reveal">Business Impact</div>
+  <h2 class="section-title reveal" style="color: var(--paper);">Measurable results across revenue, speed, and reach</h2>
+  <p class="section-desc reveal">
+    The platform transformation delivered compounding returns — faster production, higher engagement, and a new programmatic revenue stream.
+  </p>
+
+  <div class="impact-grid reveal">
+    <div class="impact-card">
+      <div class="impact-val revenue">$1M+</div>
+      <div class="impact-label">Incremental revenue from<br>automated ad serving via GAM</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-val speed">60%</div>
+      <div class="impact-label">Reduction in newsletter<br>production time with AI</div>
+    </div>
+    <div class="impact-card">
+      <div class="impact-val reach">+18%</div>
+      <div class="impact-label">Open rate improvement via<br>AI subject line optimisation</div>
+    </div>
+  </div>
+
+  <div class="partners-strip reveal">
+    <div class="partner-label">Key Campaign Partners</div>
+    <div class="partner-name">Harvey Norman</div>
+    <div class="partner-name">The Good Guys</div>
+    <div class="partner-name">Deloitte</div>
+  </div>
+</section>
+
+<section id="stack">
+  <div class="section-label reveal">Technology Stack</div>
+  <h2 class="section-title reveal">Tools &amp; platforms powering the engine</h2>
+  <p class="section-desc reveal">
+    A modern stack combining enterprise marketing infrastructure with cutting-edge AI capabilities and real-time data engineering.
+  </p>
+
+  <div class="stack-pills reveal">
+    <div class="stack-pill primary">Salesforce Marketing Cloud</div>
+    <div class="stack-pill primary">Claude (Anthropic)</div>
+    <div class="stack-pill primary">Gemini (Google)</div>
+    <div class="stack-pill">Google Ad Manager</div>
+    <div class="stack-pill">Content Builder</div>
+    <div class="stack-pill">Journey Builder</div>
+    <div class="stack-pill">AMPscript</div>
+    <div class="stack-pill">SSJS</div>
+    <div class="stack-pill">SQL (SFMC DE)</div>
+    <div class="stack-pill">REST APIs</div>
+    <div class="stack-pill">Data Extensions</div>
+    <div class="stack-pill">Recommendation Engine</div>
+    <div class="stack-pill">A/B Testing</div>
+    <div class="stack-pill">Analytics Dashboard</div>
+    <div class="stack-pill">Python (Data Eng)</div>
+    <div class="stack-pill">Personalisation Models</div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-left">Kenny Xu — Newsletters Platform</div>
+  <div class="foot-right">Portfolio Case Study</div>
+</footer>
+
+<script>
+  // Intersection Observer for reveal animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

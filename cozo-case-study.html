@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COZO Intelligence — Case Study</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --surface: #ffffff;
+    --surface-alt: #ece7df;
+    --border: rgba(0,0,0,0.08);
+    --text: #0e0e0e;
+    --text-muted: #6b6560;
+    --accent: #f5a623;
+    --accent-dim: #e09510;
+    --accent-glow: rgba(245, 166, 35, 0.10);
+    --thermal-red: #e84545;
+    --thermal-orange: #f5a623;
+    --thermal-blue: #4a9eff;
+    --radius: 16px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(245, 166, 35, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent);
+  }
+
+  .hero-label {
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 32px;
+    font-weight: 500;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    max-width: 900px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 48px;
+    margin-top: 56px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+
+  .hero-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .hero-meta-item span:first-child {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .hero-meta-item span:last-child {
+    font-size: 15px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  section {
+    padding: 100px 60px;
+    position: relative;
+  }
+
+  section::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 60px; right: 60px;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    max-width: 700px;
+    margin-bottom: 48px;
+  }
+
+  .section-title em { font-style: italic; color: var(--accent); }
+
+  .overview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 24px;
+  }
+
+  .overview-card {
+    background: var(--surface);
+    border: none;
+    border-radius: var(--radius);
+    padding: 40px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .overview-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  }
+
+  .overview-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .overview-card p {
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: var(--surface);
+    border: none;
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-top: 64px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+
+  .stat {
+    padding: 40px;
+    text-align: center;
+    position: relative;
+  }
+
+  .stat:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 20%; bottom: 20%;
+    width: 1px;
+    background: rgba(0,0,0,0.08);
+  }
+
+  .stat-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+
+  .product-card {
+    background: var(--surface);
+    border: none;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+
+  .product-card-visual {
+    height: 240px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .product-card-visual.thermal {
+    background: linear-gradient(135deg, #f5e6d0 0%, #f0d4a8 30%, #e84545 60%, #f5a623 80%, #ffe066 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .product-card-visual.smart-factory {
+    background: linear-gradient(135deg, #dde5ed 0%, #b8c9db 50%, #8ea8c3 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .product-card-visual.edge-box {
+    background: linear-gradient(135deg, #daecd5 0%, #b5d4aa 50%, #8bb87a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .product-card-visual.platform {
+    background: linear-gradient(135deg, #f0dcd0 0%, #e0bfab 50%, #c99b82 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .visual-icon {
+    font-size: 64px;
+    opacity: 0.6;
+  }
+
+  .visual-label {
+    position: absolute;
+    bottom: 16px; left: 20px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(0,0,0,0.4);
+    font-weight: 500;
+  }
+
+  .product-card-body {
+    padding: 32px;
+  }
+
+  .product-card-body h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .product-card-body p {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .tag-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+
+  .tag {
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 100px;
+    border: 1px solid rgba(0,0,0,0.1);
+    color: var(--text-muted);
+  }
+
+  .role-content {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 64px;
+    align-items: start;
+  }
+
+  .role-description p {
+    color: var(--text-muted);
+    font-size: 15px;
+    margin-bottom: 20px;
+  }
+
+  .contribution-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .contribution-list li {
+    padding-left: 24px;
+    position: relative;
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .contribution-list li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 10px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.6;
+  }
+
+  .contribution-list li strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .roadmap-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 24px;
+    position: relative;
+  }
+
+  .roadmap-timeline::before {
+    content: '';
+    position: absolute;
+    left: 23px; top: 0; bottom: 0;
+    width: 1px;
+    background: rgba(0,0,0,0.1);
+  }
+
+  .roadmap-item {
+    display: flex;
+    gap: 32px;
+    padding: 28px 0;
+    position: relative;
+  }
+
+  .roadmap-dot {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: none;
+    color: white !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    z-index: 1;
+    transition: border-color 0.3s ease;
+  }
+
+  .roadmap-item:hover .roadmap-dot {
+    border-color: var(--accent);
+  }
+
+  .roadmap-text h4 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .roadmap-text p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .outcome-content {
+    max-width: 700px;
+  }
+
+  .outcome-content p {
+    color: var(--text-muted);
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+
+  .highlight-box {
+    background: white;
+    border-left: 4px solid var(--accent);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    padding: 28px 32px;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    margin: 40px 0;
+  }
+
+  .highlight-box p {
+    color: var(--text);
+    font-size: 16px;
+    font-style: italic;
+    margin: 0;
+  }
+
+  .back-bar {
+    padding: 40px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+  }
+
+  .back-link:hover { color: var(--accent); }
+
+  .back-link svg {
+    width: 16px; height: 16px;
+    transition: transform 0.3s ease;
+  }
+
+  .back-link:hover svg { transform: translateX(-4px); }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 900px) {
+    .hero { padding: 60px 28px; }
+    section { padding: 64px 28px; }
+    .back-bar { padding: 32px 28px; }
+    .overview-grid, .product-grid { grid-template-columns: 1fr; }
+    .role-content { grid-template-columns: 1fr; gap: 40px; }
+    .stats-bar { grid-template-columns: 1fr 1fr; }
+    .stat:nth-child(2)::after { display: none; }
+    .hero-meta { flex-direction: column; gap: 20px; }
+    section::after { left: 28px; right: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="back-bar">
+  <a href="#" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Back to Work
+  </a>
+</div>
+
+<section class="hero">
+  <div class="hero-label">Case Study</div>
+  <h1>Bringing <em>AI-Powered</em> Smart Building Solutions to Market</h1>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span>Company</span>
+      <span>COZO Intelligence</span>
+    </div>
+    <div class="hero-meta-item">
+      <span>Location</span>
+      <span>Shanghai, China</span>
+    </div>
+    <div class="hero-meta-item">
+      <span>Period</span>
+      <span>2021 — 2022</span>
+    </div>
+    <div class="hero-meta-item">
+      <span>Role</span>
+      <span>Product Manager — R&D</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="fade-in">
+    <div class="section-label">01 — Overview</div>
+    <div class="section-title">A $2.5M R&D initiative transforming spaces into <em>intelligent environments</em></div>
+  </div>
+  <div class="overview-grid fade-in">
+    <div class="overview-card">
+      <h3>The Challenge</h3>
+      <p>Factories, retail centres, schools, and airports operate with disconnected safety and monitoring systems — fire alarms, leak detectors, occupancy sensors, and thermal cameras all running in isolation with no unified view of building health.</p>
+    </div>
+    <div class="overview-card">
+      <h3>The Vision</h3>
+      <p>Build a centralised AI platform connecting IoT sensors, thermal cameras, and smart devices into a single intelligent system that automates safety reporting and gives operators a real-time overview of building conditions.</p>
+    </div>
+  </div>
+
+  <div class="stats-bar fade-in">
+    <div class="stat">
+      <div class="stat-value">$2.5M</div>
+      <div class="stat-label">R&D Investment</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">30</div>
+      <div class="stat-label">Team Members</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">2</div>
+      <div class="stat-label">Markets (JP & US)</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">5+</div>
+      <div class="stat-label">Verticals Targeted</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="fade-in">
+    <div class="section-label">02 — Product Suite</div>
+    <div class="section-title">Hardware meets intelligence — the <em>COZO ecosystem</em></div>
+  </div>
+  <div class="product-grid fade-in">
+    <div class="product-card">
+      <div class="product-card-visual thermal">
+        <div class="visual-icon">🌡️</div>
+        <div class="visual-label">CZ01 Camera</div>
+      </div>
+      <div class="product-card-body">
+        <h3>AI Thermal Camera (CZ01)</h3>
+        <p>Facial imagery detection combined with a smart thermometer to detect temperature discrepancies — identifying fires, equipment overheating, and fever in individuals. Deployed during COVID-19 for mass screening in schools and public venues.</p>
+        <div class="tag-row">
+          <span class="tag">Computer Vision</span>
+          <span class="tag">Thermal Imaging</span>
+          <span class="tag">COVID Response</span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-card-visual smart-factory">
+        <div class="visual-icon">🏭</div>
+        <div class="visual-label">Smart Factory</div>
+      </div>
+      <div class="product-card-body">
+        <h3>Smart Factory Solution</h3>
+        <p>A centralised AI system connecting water leak sensors, fire alarms, humidity sensors, smoke detectors, and smart occupancy sensors — providing a unified dashboard for automated safety reporting across the entire facility.</p>
+        <div class="tag-row">
+          <span class="tag">IoT Integration</span>
+          <span class="tag">Safety Automation</span>
+          <span class="tag">Real-time Monitoring</span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-card-visual edge-box">
+        <div class="visual-icon">📦</div>
+        <div class="visual-label">Edge Computing</div>
+      </div>
+      <div class="product-card-body">
+        <h3>COZO Edge Smart Box</h3>
+        <p>On-premise edge computing unit that processes sensor data locally for low-latency decision making, connecting all IoT devices within a building to the central intelligence platform.</p>
+        <div class="tag-row">
+          <span class="tag">Edge Computing</span>
+          <span class="tag">IoT Gateway</span>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-card-visual platform">
+        <div class="visual-icon">📊</div>
+        <div class="visual-label">Intelligence Platform</div>
+      </div>
+      <div class="product-card-body">
+        <h3>Centralised AI Platform</h3>
+        <p>Cloud-based dashboard providing a high-level overview of safety and production metrics, replacing fragmented device-by-device monitoring with a single pane of glass for building operators.</p>
+        <div class="tag-row">
+          <span class="tag">Dashboard</span>
+          <span class="tag">Machine Learning</span>
+          <span class="tag">Analytics</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="fade-in">
+    <div class="section-label">03 — My Role</div>
+    <div class="section-title">Driving product roadmap across <em>Japan & USA</em> markets</div>
+  </div>
+  <div class="role-content fade-in">
+    <div class="role-description">
+      <p>As Product Manager within the R&D Department, I led a cross-functional team of 30 across engineering, design, marketing, and sales — taking COZO's IoT and machine learning innovations from R&D concept to market-ready products.</p>
+      <p>The role spanned the full product lifecycle: from driving feature prioritisation with partners and distributors, to coordinating with internal stakeholders across finance, engineering, and supply chain to ensure timely delivery.</p>
+    </div>
+    <ul class="contribution-list">
+      <li><strong>Brought a $2.5M R&D project into market</strong> — owning the end-to-end journey from prototype to commercial product across IoT and machine learning domains</li>
+      <li><strong>Drove product roadmap execution</strong> and feature prioritisation for international partners and distributors in Japan and the USA</li>
+      <li><strong>Led smart building integration</strong> — converting factories, retail centres, schools, and airports through the COZO integrated product suite</li>
+      <li><strong>Managed cross-functional stakeholders</strong> across sales, marketing, finance, engineering, design, and supplier teams to coordinate product delivery</li>
+      <li><strong>Created product training materials</strong> and custom sales collateral for each partner and distribution channel</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="fade-in">
+    <div class="section-label">04 — Go-to-Market Strategy</div>
+    <div class="section-title">The roadmap for pushing COZO products <em>to market</em></div>
+  </div>
+  <div class="roadmap-timeline fade-in">
+    <div class="roadmap-item">
+      <div class="roadmap-dot">1</div>
+      <div class="roadmap-text">
+        <h4>Build Partnerships & Distribution Channels</h4>
+        <p>Establish new partnerships and distribution networks across Japan and USA markets to expand product reach and commercial viability.</p>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-dot">2</div>
+      <div class="roadmap-text">
+        <h4>Strengthen Existing Relationships</h4>
+        <p>Maintain and deepen relationships with current partners through exceptional service, building out channels and co-developing features based on their needs.</p>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-dot">3</div>
+      <div class="roadmap-text">
+        <h4>Scale Marketing & Sales Teams</h4>
+        <p>Expand the go-to-market organisation to deliver better partner experiences and grow product adoption across new verticals.</p>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-dot">4</div>
+      <div class="roadmap-text">
+        <h4>Continuous Product Improvement</h4>
+        <p>Work closely with engineering to iterate on the product line, ensuring client business and safety needs are met through regular feature releases.</p>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-dot">5</div>
+      <div class="roadmap-text">
+        <h4>Event Participation & Feature Backlog</h4>
+        <p>Attend industry events to build partnerships, gather market intelligence, and feed the product feature backlog with real customer insights.</p>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-dot">6</div>
+      <div class="roadmap-text">
+        <h4>Sales Enablement & Training</h4>
+        <p>Develop product training programmes and create custom materials for sales and marketing teams, tailored to each partner and distribution channel.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="fade-in">
+    <div class="section-label">05 — Impact</div>
+    <div class="section-title">Unified intelligence for <em>safer spaces</em></div>
+  </div>
+  <div class="outcome-content fade-in">
+    <p>The COZO Intelligence product suite replaced fragmented, siloed monitoring systems with a single AI-driven platform. Rather than each sensor and camera operating independently, building operators gained a unified view of safety and production across their entire facility.</p>
+    <div class="highlight-box">
+      <p>By centralising IoT data through the Edge Smart Box and AI platform, COZO enabled real-time automated safety reporting — giving operators the high-level visibility needed to prevent incidents rather than just react to them.</p>
+    </div>
+    <p>The thermal camera solution proved especially impactful during the COVID-19 pandemic, enabling mass temperature screening in schools and public venues while simultaneously serving its core purpose of fire and overheating detection in industrial settings.</p>
+  </div>
+</section>
+
+<div class="back-bar">
+  <a href="#" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Back to Work
+  </a>
+</div>
+
+<script>
+  // Intersection Observer for scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Video Player Global Transformation — Kenny Xu</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --cream: #f5f0e8;
+    --black: #0e0e0e;
+    --orange: #f5a623;
+    --muted: #6b6560;
+    --white: #ffffff;
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+  body { background: var(--cream); color: var(--black); font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    padding: 1.5rem 6rem;
+    display: flex; align-items: center; justify-content: space-between;
+    background: #fff; box-shadow: 0 1px 0 rgba(0,0,0,0.07);
+  }
+  .nav-logo { font-family:'Syne',sans-serif; font-weight:800; font-size:1.1rem; letter-spacing:-0.02em; color:var(--black); text-decoration:none; }
+  .nav-back { font-size:0.85rem; color:var(--muted); text-decoration:none; display:flex; align-items:center; gap:0.4rem; transition:color 0.2s; }
+  .nav-back:hover { color:var(--black); }
+
+  .case-hero { padding: 10rem 6rem 4rem; max-width: 900px; text-align: center; margin: 0 auto; }
+  .case-label { font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-bottom:1.5rem; }
+  .case-title { font-family:'Syne',sans-serif; font-size:clamp(1.6rem,3vw,2.5rem); font-weight:800; letter-spacing:-0.03em; line-height:1.1; margin-bottom:1.5rem; }
+  .case-subtitle { font-size:1.05rem; line-height:1.75; color:var(--muted); max-width:640px; font-weight:300; }
+
+  .case-meta { display:flex; flex-wrap:wrap; justify-content:center; border-top:1px solid rgba(0,0,0,0.08); border-bottom:1px solid rgba(0,0,0,0.08); background:white; }
+  .meta-item { padding:1.75rem 2.5rem; border-right:1px solid rgba(0,0,0,0.07); }
+  .meta-item:last-child { border-right:none; }
+  .meta-item label { font-size:0.63rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:0.35rem; }
+  .meta-item span { font-family:'Syne',sans-serif; font-weight:700; font-size:0.88rem; color:var(--black); }
+
+  .case-content { padding: 0 6rem; }
+
+  .case-featured-img { width:100%; border-radius:20px; overflow:hidden; margin:4rem 0; box-shadow:0 8px 40px rgba(0,0,0,0.12); }
+  .case-featured-img img { width:100%; display:block; }
+
+  .case-section { margin:5rem 0; display:grid; grid-template-columns:220px 1fr; gap:4rem; align-items:start; }
+  .section-tag { font-size:0.68rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); padding-top:0.3rem; }
+
+  .body h2 { font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:700; letter-spacing:-0.02em; margin-bottom:1.1rem; }
+  .body p { font-size:0.93rem; line-height:1.8; color:var(--muted); font-weight:300; margin-bottom:1rem; }
+  .body p:last-child { margin-bottom:0; }
+
+  .sgrid { display:grid; gap:1.1rem; margin-top:1.5rem; }
+  .sgrid.c3 { grid-template-columns:repeat(3,1fr); }
+  .sgrid.c4 { grid-template-columns:repeat(4,1fr); }
+  .sgrid.c2 { grid-template-columns:repeat(2,1fr); }
+  .sgrid.c5 { grid-template-columns:repeat(5,1fr); }
+  .scard { background:white; border-radius:16px; padding:1.75rem 2rem; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+  .scard.dark { background:var(--black); }
+  .scard.orange { background:var(--orange); }
+  .snum { font-family:'Syne',sans-serif; font-size:2.1rem; font-weight:800; letter-spacing:-0.04em; color:var(--black); line-height:1.1; margin-bottom:0.4rem; }
+  .scard.dark .snum { color:white; }
+  .scard.orange .snum { color:white; }
+  .snum em { color:var(--orange); font-style:normal; }
+  .scard.dark .snum em { color:#ffd166; }
+  .slabel { font-size:0.78rem; line-height:1.5; color:var(--muted); font-weight:300; }
+  .scard.dark .slabel { color:rgba(255,255,255,0.5); }
+  .scard.orange .slabel { color:rgba(255,255,255,0.8); }
+
+  .callout { background:white; border-radius:16px; padding:2rem 2.5rem; border-left:4px solid var(--orange); margin:1.75rem 0; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+  .callout p { font-size:1rem !important; color:var(--black) !important; font-style:italic; font-weight:400 !important; line-height:1.75 !important; margin:0 !important; }
+
+  .logo-strip { display:flex; gap:2.5rem; align-items:center; flex-wrap:wrap; margin-top:1.5rem; padding:1.5rem 2rem; background:white; border-radius:14px; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+  .logo-strip img { height:22px; object-fit:contain; filter:grayscale(1); opacity:0.45; }
+
+  .checklist { display:flex; flex-direction:column; gap:0.65rem; margin-top:1.25rem; }
+  .ci { display:flex; align-items:flex-start; gap:0.75rem; font-size:0.9rem; line-height:1.65; color:var(--muted); font-weight:300; }
+  .ci-dot { flex-shrink:0; width:20px; height:20px; background:var(--orange); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.58rem; font-weight:800; margin-top:0.18rem; }
+  .ci.wip .ci-dot { background:rgba(0,0,0,0.12); color:var(--muted); }
+
+  .pillars { display:grid; grid-template-columns:repeat(3,1fr); gap:1.1rem; margin-top:1.5rem; }
+  .pillar { background:white; border-radius:16px; padding:1.75rem; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+  .pillar h4 { font-family:'Syne',sans-serif; font-size:0.87rem; font-weight:700; margin-bottom:0.85rem; color:var(--black); }
+  .pillar ul { list-style:none; display:flex; flex-direction:column; gap:0.45rem; }
+  .pillar li { font-size:0.82rem; line-height:1.55; color:var(--muted); font-weight:300; padding-left:0.9rem; position:relative; }
+  .pillar li::before { content:'–'; position:absolute; left:0; color:var(--orange); }
+
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:1.1rem; margin-top:1.5rem; }
+  .tc { background:white; border-radius:16px; padding:1.75rem; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+  .tc h4 { font-family:'Syne',sans-serif; font-size:0.87rem; font-weight:700; margin-bottom:0.85rem; color:var(--black); }
+  .tc ul { list-style:none; display:flex; flex-direction:column; gap:0.45rem; }
+  .tc li { font-size:0.82rem; line-height:1.55; color:var(--muted); font-weight:300; padding-left:0.9rem; position:relative; }
+  .tc li::before { content:'–'; position:absolute; left:0; color:var(--orange); }
+
+  .ba-table { border-radius:16px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,0.06); margin-top:1.25rem; }
+  .ba-header { display:grid; grid-template-columns:1fr 1fr; }
+  .ba-h { padding:0.85rem 1.5rem; font-family:'Syne',sans-serif; font-size:0.78rem; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+  .ba-h.before { background:#0e0e0e; color:white; }
+  .ba-h.after { background:var(--orange); color:white; }
+  .ba-row { display:grid; grid-template-columns:1fr 1fr; background:white; border-bottom:1px solid rgba(0,0,0,0.055); }
+  .ba-row:last-child { border-bottom:none; }
+  .ba-cell { padding:0.85rem 1.5rem; font-size:0.82rem; line-height:1.55; color:var(--muted); font-weight:300; }
+  .ba-cell.before { border-right:1px solid rgba(0,0,0,0.06); background:rgba(0,0,0,0.012); }
+
+  .cwv-table { border-radius:16px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,0.06); margin-top:1.25rem; }
+  .cwv-header { display:grid; grid-template-columns:1fr 100px 160px; background:var(--black); }
+  .cwv-h { padding:0.85rem 1.25rem; font-family:'Syne',sans-serif; font-size:0.72rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:rgba(255,255,255,0.6); }
+  .cwv-row { display:grid; grid-template-columns:1fr 100px 160px; background:white; border-bottom:1px solid rgba(0,0,0,0.055); }
+  .cwv-row:last-child { border-bottom:none; }
+  .cwv-cell { padding:0.9rem 1.25rem; font-size:0.84rem; color:var(--muted); font-weight:300; display:flex; align-items:center; }
+  .cwv-cell.metric { color:var(--black); font-weight:400; }
+  .cwv-cell.new { color:#1a9b4b; font-weight:600; font-family:'Syne',sans-serif; }
+
+  .plugin-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.6rem; margin-top:1.25rem; }
+  .plugin-chip { background:white; border-radius:10px; padding:0.8rem 1.1rem; font-size:0.82rem; color:var(--black); font-weight:400; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:flex; align-items:center; gap:0.5rem; }
+  .plugin-chip::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--orange); flex-shrink:0; }
+
+  .rtable { border-radius:16px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,0.06); margin-top:1.25rem; }
+  .rrow { display:grid; grid-template-columns:190px 1fr; background:white; border-bottom:1px solid rgba(0,0,0,0.055); }
+  .rrow:last-child { border-bottom:none; }
+  .rlabel { padding:0.95rem 1.25rem; font-size:0.78rem; font-weight:600; color:var(--black); background:rgba(0,0,0,0.018); border-right:1px solid rgba(0,0,0,0.055); display:flex; align-items:center; }
+  .rdesc { padding:0.95rem 1.25rem; font-size:0.81rem; line-height:1.6; color:var(--muted); font-weight:300; display:flex; align-items:center; }
+
+  .tag-row { display:flex; flex-wrap:wrap; gap:0.55rem; margin-top:1.25rem; }
+  .tag { background:rgba(0,0,0,0.06); border-radius:100px; padding:0.32rem 0.85rem; font-size:0.76rem; color:var(--black); font-weight:500; }
+  .tag.hi { background:var(--orange); color:white; }
+
+  .demo-wrap { border-radius:20px; overflow:hidden; margin:1.75rem 0; box-shadow:0 4px 24px rgba(0,0,0,0.12); background:#0d0d0d; }
+  .demo-wrap img { width:100%; display:block; }
+
+  .img-wrap { border-radius:20px; overflow:hidden; margin:1.75rem 0; box-shadow:0 4px 20px rgba(0,0,0,0.1); }
+  .img-wrap img { width:100%; display:block; }
+
+  .section-divider { margin:3.5rem 0 2rem; display:flex; align-items:center; gap:1rem; }
+  .section-divider span { font-size:0.68rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); white-space:nowrap; }
+  .section-divider::after { content:''; flex:1; height:1px; background:rgba(0,0,0,0.08); }
+
+  .divider { height:1px; background:rgba(0,0,0,0.07); margin:5rem 6rem; }
+
+  .case-footer { padding:4rem 6rem 6rem; display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(0,0,0,0.07); }
+  .fl { font-size:0.68rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); margin-bottom:0.45rem; }
+  .fp { font-family:'Syne',sans-serif; font-weight:700; font-size:1.05rem; color:var(--black); text-decoration:none; }
+  .fp:hover { color:var(--orange); }
+
+  @media (max-width:900px) {
+    nav { padding:1.25rem 1.5rem; }
+    .case-hero { padding:8rem 1.5rem 3rem; }
+    .case-meta { flex-wrap:wrap; }
+    .case-content { padding:0 1.5rem; }
+    .case-section { grid-template-columns:1fr; gap:1rem; }
+    .sgrid.c3,.sgrid.c4,.sgrid.c5 { grid-template-columns:repeat(2,1fr); }
+    .pillars { grid-template-columns:1fr; }
+    .two-col { grid-template-columns:1fr; }
+    .plugin-grid { grid-template-columns:1fr 1fr; }
+    .divider { margin:3rem 1.5rem; }
+    .case-footer { padding:3rem 1.5rem 4rem; flex-direction:column; gap:2rem; align-items:flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">KX</a>
+  <a href="index.html" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 7H2M7 2L2 7l5 5"/></svg>
+    Back to Work
+  </a>
+</nav>
+
+<div class="case-hero">
+  <div class="case-label">Case Study &nbsp;·&nbsp; News Corp Australia</div>
+  <h1 class="case-title">Video & Audio Player<br>Global Transformation</h1>
+  <p class="case-subtitle" style="margin:0 auto;">Rebuilding News Corp Australia's entire video infrastructure from the ground up — consolidating 6 player variants into one adaptive platform, growing weekly video starts from 20M to 26M, and pushing annual video views from 1 billion to 1.3 billion.</p>
+</div>
+
+<div class="case-meta">
+  <div class="meta-item"><label>Web Team</label><span>5 Devs · 3 Testers</span></div>
+  <div class="meta-item"><label>Mobile Team</label><span>15 Devs · 2 Testers</span></div>
+  <div class="meta-item"><label>User Stories</label><span>545 Tickets</span></div>
+  <div class="meta-item"><label>Features</label><span>25+ Shipped</span></div>
+  <div class="meta-item"><label>Workshops</label><span>20+ Run</span></div>
+</div>
+
+<div class="case-content">
+
+  <div class="case-featured-img" style="display:flex;flex-direction:column;gap:1rem;">
+    <img src="images/vp-image-1.jpg" alt="Fractured video experiences" style="width:100%;border-radius:12px;display:block;"/>
+  </div>
+
+  <div class="case-section">
+    <div class="section-tag">Overview</div>
+    <div class="body">
+      <h2>The brief</h2>
+      <p>News Corp Australia's video infrastructure had accumulated years of technical debt — multiple overloaded player instances, hardcoded inflexible features, and no adaptation to user environments. Each brand ran its own implementation with an inconsistent experience, preventing meaningful monetisation at scale.</p>
+      <p>The vision: build a single Advanced Video and audio Player — dynamic, customer-centric, and configurable by design — that dynamically adjusts to any content type, device and environment, with a plugin architecture for scalability and a unified design across all viewports.</p>
+
+    </div>
+  </div>
+
+  <div class="sgrid c3">
+    <div class="scard dark">
+      <div class="snum"><em>147%</em></div>
+      <div class="slabel">Growth in weekly video starts — from 45M in Jan 2024 to 111M in Mar 2025, far exceeding the 15% YoY target</div>
+    </div>
+    <div class="scard dark">
+      <div class="snum"><em>1B+</em></div>
+      <div class="slabel">Annual media starts in FY25, up from 618M in FY24</div>
+    </div>
+    <div class="scard dark">
+      <div class="snum">7.9M <em>hrs</em></div>
+      <div class="slabel">Total time spent in FY25, growing from 6.8M hours the prior year</div>
+    </div>
+  </div>
+  <div class="sgrid c4" style="margin-top:1.1rem;">
+    <div class="scard">
+      <div class="snum"><em>35M</em></div>
+      <div class="slabel">Media starts from Video Elephant integration over 12 months</div>
+    </div>
+    <div class="scard">
+      <div class="snum">90–<em>100M</em></div>
+      <div class="slabel">Monthly starts post-autoplay (Jun 2024), up from 50–60M avg.</div>
+    </div>
+    <div class="scard">
+      <div class="snum"><em>16,171</em></div>
+      <div class="slabel">Audio subscriber additions — nearly 2× the 8,600 forecast</div>
+    </div>
+    <div class="scard">
+      <div class="snum">+<em>$95K</em></div>
+      <div class="slabel">Audio revenue above forecast in the same period</div>
+    </div>
+  </div>
+
+  <div class="case-section">
+    <div class="section-tag">Strategy & Vision</div>
+    <div class="body">
+      <h2>Current state → future state</h2>
+      <p>The core architectural problem was clear: too many overloaded player instances, each hardcoded and inflexible, producing an inconsistent user experience with no ability to adapt to user environments. The solution was a fundamental shift in how the player was conceived.</p>
+      <div class="ba-table">
+        <div class="ba-header">
+          <div class="ba-h before">Current State</div>
+          <div class="ba-h after">Future State (AVP)</div>
+        </div>
+        <div class="ba-row">
+          <div class="ba-cell before">Overloaded player instances</div>
+          <div class="ba-cell">One player, configurable by design</div>
+        </div>
+        <div class="ba-row">
+          <div class="ba-cell before">Lack of adaptation to user environments</div>
+          <div class="ba-cell">Dynamically adjusts to content and device</div>
+        </div>
+        <div class="ba-row">
+          <div class="ba-cell before">Inconsistent user experience across brands</div>
+          <div class="ba-cell">Consistent design across all viewports</div>
+        </div>
+        <div class="ba-row">
+          <div class="ba-cell before">Hardcoded, inflexible features</div>
+          <div class="ba-cell">Plugin architecture for scalability</div>
+        </div>
+        <div class="ba-row">
+          <div class="ba-cell before">6 separate player variants</div>
+          <div class="ba-cell">1 unified, streamlined player</div>
+        </div>
+      </div>
+      <div class="sgrid c3" style="margin-top:1.25rem;">
+        <div class="scard">
+          <div class="snum" style="font-size:1.3rem; margin-bottom:0.5rem;">Single codebase</div>
+          <div class="slabel">Enables seamless feature rollouts across all brands simultaneously</div>
+        </div>
+        <div class="scard">
+          <div class="snum" style="font-size:1.3rem; margin-bottom:0.5rem;">Maximise yield</div>
+          <div class="slabel">Targeted content &amp; feature switching drives ad revenue per impression</div>
+        </div>
+        <div class="scard">
+          <div class="snum" style="font-size:1.3rem; margin-bottom:0.5rem;">Unified UX</div>
+          <div class="slabel">Cohesive experience across all viewports, devices and brands</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-section">
+    <div class="section-tag">UX Design</div>
+    <div class="body">
+      <h2>UI enhancements & features</h2>
+      <p>A unified design pattern was developed to ensure an intuitive and seamless experience across every viewport and brand. The design system is modular, reusable, and built for evolving consumer and business needs.</p>
+
+      <div class="img-wrap" style="margin-top:1.75rem;">
+        <img src="images/vp-image-2.jpg" alt="Article viewing experience before and after" style="width:100%;display:block;border-radius:12px;"/>
+      </div>
+      <div class="img-wrap">
+        <img src="images/vp-image-3.jpg" alt="Feature highlights" style="width:100%;display:block;border-radius:12px;"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-section">
+    <div class="section-tag">Ad & Content Delivery</div>
+    <div class="body">
+      <h2>Dynamic content & ad delivery</h2>
+      <p>The content and ad experience dynamically adjusts to the device's orientation — portrait serves vertical ads and content, landscape locks to horizontal. This adaptive approach maximises both user engagement and revenue potential per impression.</p>
+      <p>The updated subscriber breach screen now supports locking premium content for both vertical and horizontal video formats, empowering editorial teams to drive subscriber acquisition by controlling access to premium video content — with a consistent look and feel across both orientations, replacing the previously fragmented breach journeys.</p>
+      <div class="sgrid c3" style="margin-top:1.25rem;">
+        <div class="scard">
+          <div class="snum" style="font-size:1.2rem;">Portrait</div>
+          <div class="slabel" style="margin-top:0.5rem;">Serves vertical content then vertical ads, maximising portrait-specific inventory</div>
+        </div>
+        <div class="scard">
+          <div class="snum" style="font-size:1.2rem;">Landscape</div>
+          <div class="slabel" style="margin-top:0.5rem;">Locks to horizontal content and ads when user rotates device</div>
+        </div>
+        <div class="scard">
+          <div class="snum" style="font-size:1.2rem;">Subscription</div>
+          <div class="slabel" style="margin-top:0.5rem;">Consistent premium content gating across vertical &amp; horizontal formats</div>
+        </div>
+      </div>
+      <div class="img-wrap" style="margin-top:1.75rem;">
+        <img src="images/vp-image-4.jpg" alt="Advertising experience before and after" style="width:100%;display:block;border-radius:12px;"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-section">
+    <div class="section-tag">Plugin Architecture</div>
+    <div class="body">
+      <h2>Video Player Plugin Library</h2>
+      <p>The AVP is built on a configurable plugin architecture — any feature can be toggled on or off per brand, environment, device type, content type, section, or user preference. Changes go through the video team for review, testing and rollout to maintain quality and consistency.</p>
+      <div class="plugin-grid">
+        <div class="plugin-chip">Swipe Navigation</div>
+        <div class="plugin-chip">Video Sharing</div>
+        <div class="plugin-chip">Auto Pause</div>
+        <div class="plugin-chip">Full Screen Mode</div>
+        <div class="plugin-chip">Airplay &amp; Chromecast</div>
+        <div class="plugin-chip">Player Settings</div>
+        <div class="plugin-chip">Instream Ads</div>
+        <div class="plugin-chip">Interactive CTAs</div>
+        <div class="plugin-chip">Subscriber Locking</div>
+        <div class="plugin-chip">Autoplay (on/off)</div>
+        <div class="plugin-chip">Closed Captions</div>
+        <div class="plugin-chip">Video Quality</div>
+        <div class="plugin-chip">Video Scrubbing</div>
+        <div class="plugin-chip">Related Videos</div>
+        <div class="plugin-chip">Custom Playlist</div>
+        <div class="plugin-chip">Sticky Mode</div>
+        <div class="plugin-chip">Personalised Recs</div>
+        <div class="plugin-chip">Analytics</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-section">
+    <div class="section-tag">Technical Performance</div>
+    <div class="body">
+      <h2>Core Web Vitals improvements</h2>
+      <p>The new AVP player was benchmarked against the previous player across all Core Web Vital metrics — delivering significant improvements in loading speed and layout stability that directly impact SEO, user experience, and ad viewability.</p>
+      <div class="cwv-table">
+        <div class="cwv-header">
+          <div class="cwv-h">Metric</div>
+          <div class="cwv-h">Before</div>
+          <div class="cwv-h">After (AVP)</div>
+        </div>
+        <div class="cwv-row">
+          <div class="cwv-cell metric">First Contentful Paint</div>
+          <div class="cwv-cell">1.1s</div>
+          <div class="cwv-cell new">0.8s &nbsp;↑ 27%</div>
+        </div>
+        <div class="cwv-row">
+          <div class="cwv-cell metric">Largest Contentful Paint</div>
+          <div class="cwv-cell">1.1s</div>
+          <div class="cwv-cell new">0.8s &nbsp;↑ 27%</div>
+        </div>
+        <div class="cwv-row">
+          <div class="cwv-cell metric">Cumulative Layout Shift</div>
+          <div class="cwv-cell">1.29</div>
+          <div class="cwv-cell new">0.409 &nbsp;↑ 69%</div>
+        </div>
+        <div class="cwv-row">
+          <div class="cwv-cell metric">Speed Index</div>
+          <div class="cwv-cell">4.4s</div>
+          <div class="cwv-cell new">1.2s &nbsp;↑ 72%</div>
+        </div>
+      </div>
+      <p style="margin-top:1.25rem;">The new architecture also enables seamless feature sharing across various viewports and devices, and consistent scrolling functionality across both mobile web and desktop platforms — with a Web SDK now available for external integrations.</p>
+    </div>
+  </div>
+
+  <div class="case-section">
+    <div class="section-tag">Process</div>
+    <div class="body">
+      <h2>How it was built</h2>
+      <p>I ran more than 20 workshops to gather requirements across different pillars and business units — working closely with Heads of Vision, Client Product, Ad Tech, brand product managers, developers and product designers. Every decision was grounded in what editorial, ad ops and audiences actually needed.</p>
+      <p>All requirements were documented in Confluence as a single source of truth, laying the groundwork for future documentation and reference across the business. 545 User Story tickets were written across the Video Player and Mobile Apps project boards, with ChatGPT and NewsGPT used to translate workshop outputs into clear, actionable requirements for two large engineering teams simultaneously.</p>
+      <div class="callout">
+        <p>"Through close collaboration with key stakeholders — Heads of Vision, Client Product, and Ad Tech — we streamlined six player variants into one, enhancing scalability, improving user experience, and laying the foundation for future innovation."</p>
+      </div>
+      <p>Change management was led end-to-end, including a business-wide presentation that resulted in the AVP project being adopted by global News Corp divisions. A shared Google Chat across 32 content producers enabled fast issue resolution without navigating multiple channels.</p>
+    </div>
+  </div>
+
+  <div class="case-section">
+    <div class="section-tag">Demo</div>
+    <div class="body">
+      <h2>The player in action</h2>
+      <p>The new Adaptive Video Player — showing the contextual ad experience, smooth autoplay, and vertical video module deployed across News Corp publications.</p>
+      <div class="demo-wrap">
+        <img src="chromecapture20260301_1.gif" alt="Video player demo"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-section">
+    <div class="section-tag">Commercial Impact</div>
+    <div class="body">
+      <h2>Driving commercial goals</h2>
+      <p>The AVP targets a monthly ad impression capacity of 51M in FY26, up from 37M in FY25 — requiring a 2.8M increase per month. With a current engagement variance of -7%, the new player architecture is designed to close that gap through higher completion rates, better ad viewability, and deeper session engagement.</p>
+      <div class="sgrid c5" style="margin-top:1.25rem;">
+        <div class="scard orange">
+          <div class="snum" style="font-size:1.4rem;">+10M</div>
+          <div class="slabel">Monthly media starts target</div>
+        </div>
+        <div class="scard orange">
+          <div class="snum" style="font-size:1.4rem;">&gt;700K hrs</div>
+          <div class="slabel">Monthly total time spent</div>
+        </div>
+        <div class="scard orange">
+          <div class="snum" style="font-size:1.4rem;">&lt;2s</div>
+          <div class="slabel">Video start time target</div>
+        </div>
+        <div class="scard orange">
+          <div class="snum" style="font-size:1.4rem;">100%</div>
+          <div class="slabel">Feature coverage across brands</div>
+        </div>
+        <div class="scard orange">
+          <div class="snum" style="font-size:1.4rem;">&gt;70%</div>
+          <div class="slabel">Ad viewability target</div>
+        </div>
+      </div>
+      <div class="sgrid c2" style="margin-top:1.1rem;">
+        <div class="scard">
+          <div class="snum">618M <em>→ 1B+</em></div>
+          <div class="slabel">Annual media starts, FY24 to FY25</div>
+        </div>
+        <div class="scard">
+          <div class="snum">6.8M <em>→ 7.9M hrs</em></div>
+          <div class="slabel">Total time spent, FY24 to FY25</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-section">
+    <div class="section-tag">Gen-AI Adoption</div>
+    <div class="body">
+      <h2>AI as a delivery accelerator</h2>
+      <p>ChatGPT and NewsGPT were used throughout the project to translate workshop outputs into detailed, structured development and testing requirements at pace across two large engineering teams simultaneously.</p>
+      <div class="sgrid c2" style="margin-top:1.25rem;">
+        <div class="scard">
+          <div class="snum"><em>545</em></div>
+          <div class="slabel">User Story tickets aided by AI across Video Player and Mobile Apps boards</div>
+        </div>
+        <div class="scard">
+          <div class="snum"><em>320+</em></div>
+          <div class="slabel">Development tasks driven from AI-assisted requirements coordination</div>
+        </div>
+      </div>
+      <p style="margin-top:1.25rem;">Zapier was also leveraged for automation workflows across different teams, reducing manual overhead. A Jira plugin for Google Sheets allowed high-level tracking of all tickets and statuses to quickly identify bottlenecks and address issues in real time.</p>
+    </div>
+  </div>
+
+  <div class="case-section">
+    <div class="section-tag">Risk Management</div>
+    <div class="body">
+      <h2>Proactive risk identification</h2>
+      <div class="rtable">
+        <div class="rrow"><div class="rlabel">Scope creep</div><div class="rdesc">Additional feature requests during rollout managed through strict prioritisation and documented change control.</div></div>
+        <div class="rrow"><div class="rlabel">Rollout inconsistency</div><div class="rdesc">Staggered brand-by-brand rollout mitigated through a shared change management framework and brand config process.</div></div>
+        <div class="rrow"><div class="rlabel">Player viewability</div><div class="rdesc">Sticky player behaviour, muted autoplay, and loading delays validated extensively to protect ad viewability targets.</div></div>
+        <div class="rrow"><div class="rlabel">Editorial friction</div><div class="rdesc">Editors and producers required training to avoid embedding issues — managed via the 32-producer Google Chat network.</div></div>
+        <div class="rrow"><div class="rlabel">Tracking integrity</div><div class="rdesc">Event firing (play, pause, impression, ad start/end) tested and verified before each release to protect reporting and revenue.</div></div>
+        <div class="rrow"><div class="rlabel">Missed deadlines</div><div class="rdesc">Developer capacity constraints and dependency delays surfaced early using Jira-to-Sheets tooling and weekly escalation paths.</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="divider"></div>
+
+<div class="case-footer">
+  <div>
+    <div class="fl">Previous Project</div>
+    <a href="#" class="fp">← VLAVR Global VR Ecosystem</a>
+  </div>
+  <div style="text-align:right">
+    <div class="fl">Next Project</div>
+    <a href="#" class="fp">COZO Intelligence Platform →</a>
+  </div>
+</div>
+
+</body>
+</html>
