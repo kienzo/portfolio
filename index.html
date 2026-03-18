@@ -647,13 +647,16 @@
   }
   .work-thumb.small {
     border-radius: 12px;
-    height: 220px;
+    aspect-ratio: 4/3;
+    background: #e8e3db;
   }
-  .work-thumb.small img {
+  .work-thumb.small img,
+  .work-thumb.small svg {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
+    border-radius: inherit;
   }
 
   .work-thumb .project-placeholder {
@@ -970,10 +973,10 @@
 <body>
 
 <nav>
-  <a href="#" class="nav-logo">KX</a>
+  <a href="index.html" class="nav-logo">kenny<span style="color:#c4450a">.</span>xu</a>
   <ul class="nav-links">
     <li><a href="#work">Work</a></li>
-    <li><a href="#experience">Experience</a></li>
+    <li><a href="resume.html">Experience</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
   <a href="/cdn-cgi/l/email-protection#8fe4eae1e1f6f7facfeae2eee6e3a1ece0e2" class="nav-cta">Available for roles →</a>
@@ -1013,121 +1016,17 @@
 
       <div class="float-tag tag-1">
         <span class="dot"></span>
-        News Corp Australia
+        1.3B video starts
       </div>
       <div class="float-tag tag-2">
         <span class="dot"></span>
-        +200M video starts
+        1.4B newsletter sends
       </div>
       <div class="float-tag tag-3">
         <span class="dot"></span>
-        $1M+ revenue
+        100M users
       </div>
     </div>
-  </div>
-</section>
-
-<section class="section" id="work">
-  <div class="work-layout">
-
-    <div class="work-left">
-      <div class="section-label">Selected Work</div>
-      <h2 class="section-title">Projects that moved the needle</h2>
-      <a href="#contact" class="btn-primary" style="margin-top:2rem">
-        See All
-        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 7h10M7 2l5 5-5 5"/></svg>
-      </a>
-    </div>
-
-    <div class="work-right">
-      <div class="work-container">
-
-        <div class="work-featured">
-          <div class="work-thumb">
-            <video src="images/image-2.mp4" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;display:block;border-radius:16px;"></video>
-            <div style="display:none">
-            <div class="project-overlay">
-              <div class="project-tags">
-                <span class="project-tag">Video Platform</span>
-                <span class="project-tag">News Corp</span>
-              </div>
-              <div class="project-year">2022 – Present</div>
-            </div>
-          </div>
-          <div class="work-meta">
-            <div class="work-meta-left">
-              <h3 class="work-title">Advanced Video Platform Rebuild</h3>
-              <div class="project-tags" style="margin-top:0.4rem">
-                <span class="project-tag dark">Video Platform</span>
-                <span class="project-tag dark">News Corp</span>
-              </div>
-            </div>
-            <div class="work-meta-right">2022</div>
-          </div>
-        </div>
-
-        <div class="work-grid">
-
-          <div class="work-card">
-            <div class="work-thumb small">
-              <img src="images/image-3.jpg" alt="Newsletter AI & Ad Automation" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;"/>
-              <div class="project-overlay">
-                <div class="project-tags"><span class="project-tag">AI · Revenue</span></div>
-                <div class="project-year">2023</div>
-              </div>
-            </div>
-            <div class="work-meta">
-              <div class="work-meta-left"><h3 class="work-title small">Newsletter AI & Ad Automation</h3></div>
-              <div class="work-meta-right">2023</div>
-            </div>
-          </div>
-
-          <div class="work-card">
-            <div class="work-thumb small">
-              <div class="project-placeholder"><span>GIF coming soon</span></div>
-              <div class="project-overlay">
-                <div class="project-tags"><span class="project-tag">Analytics</span></div>
-                <div class="project-year">2023</div>
-              </div>
-            </div>
-            <div class="work-meta">
-              <div class="work-meta-left"><h3 class="work-title small">Unified Analytics Platform</h3></div>
-              <div class="work-meta-right">2023</div>
-            </div>
-          </div>
-
-          <div class="work-card">
-            <div class="work-thumb small">
-              <img src="images/image-4.png" alt="COZO Smart Factory" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;"/>
-              <div class="project-overlay">
-                <div class="project-tags"><span class="project-tag">IoT · Hardware</span></div>
-                <div class="project-year">2021</div>
-              </div>
-            </div>
-            <div class="work-meta">
-              <div class="work-meta-left"><h3 class="work-title small">COZO Intelligence Platform</h3></div>
-              <div class="work-meta-right">2021</div>
-            </div>
-          </div>
-
-          <div class="work-card">
-            <div class="work-thumb small">
-              <img src="images/image-5.jpg" alt="VLAVR Global VR Ecosystem" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:12px;"/>
-              <div class="project-overlay">
-                <div class="project-tags"><span class="project-tag">VR · Partnerships</span></div>
-                <div class="project-year">2019</div>
-              </div>
-            </div>
-            <div class="work-meta">
-              <div class="work-meta-left"><h3 class="work-title small">VLAVR Global VR Ecosystem</h3></div>
-              <div class="work-meta-right">2019</div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
   </div>
 </section>
 
@@ -1151,8 +1050,8 @@
     </div>
 
     <div class="brand-pill">
-      <img src="images/image-9.png" alt="Sky News"/>
-      <span class="brand-name">Sky News</span>
+      <img src="images/image-14.png" alt="ZTE"/>
+      <span class="brand-name">ZTE</span>
     </div>
 
     <div class="brand-pill">
@@ -1176,13 +1075,119 @@
     </div>
 
     <div class="brand-pill">
-      <img src="images/image-14.png" alt="ZTE"/>
-      <span class="brand-name">ZTE</span>
+      <img src="images/image-9.png" alt="Sky News"/>
+      <span class="brand-name">Sky News</span>
     </div>
 
   </div>
   </div>
 </section>
+
+<section class="section" id="work">
+  <div class="work-layout">
+
+    <div class="work-left">
+      <div class="section-label">Selected Work</div>
+      <h2 class="section-title">Projects that moved the needle</h2>
+      <a href="#contact" class="btn-primary" style="margin-top:2rem">
+        See All
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 7h10M7 2l5 5-5 5"/></svg>
+      </a>
+    </div>
+
+    <div class="work-right">
+      <div class="work-container">
+
+        <a href="case-study-video-player.html" style="text-decoration:none;color:inherit;display:block;">
+        <div class="work-featured">
+          <div class="work-thumb">
+            <video src="images/image-2.mp4" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;display:block;border-radius:16px;"></video>
+            <div style="display:none">
+            <div class="project-overlay">
+              <div class="project-tags">
+                <span class="project-tag">Video Platform</span>
+                <span class="project-tag">News Corp</span>
+              </div>
+            </div>
+          </div>
+          <div class="work-meta">
+            <div class="work-meta-left">
+              <h3 class="work-title">Advanced Video Platform Rebuild</h3>
+              <div class="project-tags" style="margin-top:0.4rem">
+                <span class="project-tag dark">Video Platform</span>
+                <span class="project-tag dark">News Corp</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        </a>
+
+        <div class="work-grid">
+
+          <a href="newsletters-portfolio.html" style="text-decoration:none;color:inherit;display:block;">
+          <div class="work-card">
+            <div class="work-thumb small">
+              <img src="images/newsletter-card.jpg" alt="Newsletter AI & Ad Automation" />
+              <div class="project-overlay">
+                <div class="project-tags"><span class="project-tag">AI · Revenue</span></div>
+              </div>
+            </div>
+            <div class="work-meta">
+              <div class="work-meta-left"><h3 class="work-title small">Newsletter AI & Ad Automation</h3></div>
+            </div>
+          </div>
+          </a>
+
+          <a href="zapier-landing.html" style="text-decoration:none;color:inherit;display:block;">
+          <div class="work-card">
+            <div class="work-thumb small">
+              <img src="images/automation-card.jpg" alt="Process Automation & Agents" style="object-fit:cover;" />
+              <div class="project-overlay">
+                <div class="project-tags"><span class="project-tag">Automation</span></div>
+              </div>
+            </div>
+            <div class="work-meta">
+              <div class="work-meta-left"><h3 class="work-title small">Process Automation & Agents</h3></div>
+            </div>
+          </div>
+          </a>
+
+          <a href="cozo-case-study.html" style="text-decoration:none;color:inherit;display:block;">
+          <div class="work-card">
+            <div class="work-thumb small">
+              <img src="images/image-4.png" alt="COZO Smart Factory" />
+              <div class="project-overlay">
+                <div class="project-tags"><span class="project-tag">IoT · Hardware</span></div>
+              </div>
+            </div>
+            <div class="work-meta">
+              <div class="work-meta-left"><h3 class="work-title small">COZO Intelligence Platform</h3></div>
+            </div>
+          </div>
+          </a>
+
+          <a href="vlavr-case-study.html" style="text-decoration:none;color:inherit;display:block;">
+          <div class="work-card">
+            <div class="work-thumb small">
+              <img src="images/vlavr-card.jpg" alt="VLAVR Global VR Ecosystem" style="object-fit:cover;"/>
+              <div class="project-overlay">
+                <div class="project-tags"><span class="project-tag">VR · Partnerships</span></div>
+              </div>
+            </div>
+            <div class="work-meta">
+              <div class="work-meta-left"><h3 class="work-title small">VLAVR Global VR Ecosystem</h3></div>
+            </div>
+          </div>
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
 
 <section class="section" id="expertise" style="padding:5rem 6rem;">
   <div style="text-align:center; margin-bottom:3rem;">

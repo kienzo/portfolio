@@ -100,6 +100,16 @@
     position: relative;
     overflow: hidden;
   }
+  .hero-image {
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 750px;
+    opacity: 1;
+    pointer-events: none;
+    border-radius: 16px;
+  }
   .hero::before {
     content: '';
     position: absolute;
@@ -173,6 +183,12 @@
   }
 
   section { padding: 100px 48px; }
+  section:not(.hero) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
   .section-label {
     font-size: 11px;
     font-weight: 600;
@@ -202,6 +218,7 @@
     grid-template-columns: 1fr 1fr;
     gap: 24px;
     max-width: 1100px;
+    text-align: left;
   }
   .platform-card {
     background: white;
@@ -305,6 +322,7 @@
     border-radius: 16px;
     overflow: hidden;
     max-width: 1100px;
+    text-align: left;
   }
   .workflow-step {
     background: white;
@@ -378,6 +396,7 @@
     grid-template-columns: 1fr 1fr;
     gap: 24px;
     max-width: 1100px;
+    text-align: left;
   }
   .tool-card {
     border: 1px solid var(--border);
@@ -621,7 +640,7 @@
 <body>
 
 <nav>
-  <div class="logo">kenny<span>.</span>xu</div>
+  <a href="index.html" class="logo" style="text-decoration:none;color:inherit;">kenny<span>.</span>xu</a>
   <ul class="nav-links">
     <li><a href="#platform">Platform</a></li>
     <li><a href="#workflow">AI Workflow</a></li>
@@ -632,6 +651,7 @@
 </nav>
 
 <section class="hero">
+  <img src="images/vogue-newsletter-hero.jpg" alt="" class="hero-image"/>
   <div class="hero-eyebrow reveal">Case Study</div>
   <h1 class="reveal">Newsletters <em>Platform</em></h1>
   <p class="hero-sub reveal">
@@ -884,29 +904,6 @@
     </div>
   </div>
 
-  <div class="prompt-showcase reveal">
-    <div class="prompt-window">
-      <div class="prompt-bar">
-        <div class="prompt-dot"></div>
-        <div class="prompt-dot"></div>
-        <div class="prompt-dot"></div>
-        <span class="prompt-bar-title">claude — editorial-workflow.prompt</span>
-      </div>
-      <div class="prompt-body">
-        <span class="comment">// Example: AI-assisted newsletter brief → draft pipeline</span><br><br>
-        <span class="highlight">System:</span> You are a newsletter content specialist for [Brand].<br>
-        Maintain our editorial voice: authoritative, warm, concise.<br><br>
-        <span class="highlight">User:</span> Generate a newsletter draft from this brief:<br>
-        <span class="teal">- Topic:</span> Federal Budget Impact on Housing<br>
-        <span class="teal">- Audience:</span> Property investors, 35-55 demographic<br>
-        <span class="teal">- Tone:</span> Informative, actionable<br>
-        <span class="teal">- Sections:</span> Hero summary, 3 key takeaways, CTA<br><br>
-        <span class="comment">// Claude generates draft → Editor refines → SFMC assembles</span><br>
-        <span class="comment">// Total time: ~15 min (was 90+ min manual)</span><br><br>
-        <span class="blue">→ Output piped to SFMC Content Builder via API</span>
-      </div>
-    </div>
-  </div>
 </section>
 
 <section id="impact" class="impact-section">
