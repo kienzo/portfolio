@@ -30,7 +30,7 @@
 
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-    padding: 1.5rem 6rem;
+    padding: 1.5rem 3.5rem;
     display: flex; align-items: center; justify-content: space-between;
     background: #ffffff;
     box-shadow: 0 1px 0 rgba(0,0,0,0.07);
@@ -68,6 +68,45 @@
     transition: opacity 0.2s;
   }
   .nav-cta:hover { opacity: 0.5; }
+
+  /* Hamburger menu */
+  .hamburger {
+    display: none;
+    background: none; border: none; cursor: pointer;
+    width: 28px; height: 20px; position: relative; z-index: 1100;
+    padding: 0;
+  }
+  .hamburger span {
+    display: block; position: absolute; left: 0; width: 100%; height: 2px;
+    background: var(--black); border-radius: 2px;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+  .hamburger span:nth-child(1) { top: 0; }
+  .hamburger span:nth-child(2) { top: 9px; }
+  .hamburger span:nth-child(3) { top: 18px; }
+  .hamburger.active span:nth-child(1) { top: 9px; transform: rotate(45deg); }
+  .hamburger.active span:nth-child(2) { opacity: 0; }
+  .hamburger.active span:nth-child(3) { top: 9px; transform: rotate(-45deg); }
+
+  .mobile-menu {
+    display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--white); z-index: 1050;
+    flex-direction: column; align-items: center; justify-content: center; gap: 2rem;
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .mobile-menu.open { display: flex; opacity: 1; }
+  .mobile-menu a {
+    font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 700;
+    color: var(--black); text-decoration: none; letter-spacing: -0.01em;
+    opacity: 0.7; transition: opacity 0.2s;
+  }
+  .mobile-menu a:hover { opacity: 1; }
+  .mobile-menu .mobile-nav-divider {
+    width: 40px; height: 1px; background: rgba(0,0,0,0.15);
+  }
+
+  /* Expertise card: image after text on desktop */
+  .expertise-card-img-mobile { order: 1; }
 
   .hero {
     min-height: 100vh;
@@ -510,7 +549,7 @@
   footer {
     background: var(--black);
     border-top: 1px solid rgba(255,255,255,0.05);
-    padding: 1.5rem 6rem;
+    padding: 1.5rem 3.5rem;
     display: flex; align-items: center; justify-content: space-between;
     color: rgba(245,240,232,0.25);
     font-size: 0.72rem; letter-spacing: 0.06em;
@@ -955,32 +994,118 @@
 
   @media (max-width: 900px) {
     .hero { grid-template-columns: 1fr; padding-top: 7rem; }
-    .hero-right { height: 60vw; min-height: 300px; }
-    .photo-blob { width: 80vw; height: 60vw; }
+    .hero-right { height: 85vw; min-height: 380px; }
+    .photo-blob { width: 80vw; height: 85vw; }
     .cards-grid { grid-template-columns: 1fr; }
     .card-wide { grid-column: span 1; grid-template-columns: 1fr; }
     .contact-section { grid-template-columns: 1fr; }
     nav { padding: 1rem 1.5rem; }
     .nav-links { display: none; }
+    .nav-cta { display: none; }
+    .hamburger { display: block; }
     .section { padding: 4rem 1.5rem; }
     .hero { padding: 0 1.5rem; }
     .socials, .location-badge { bottom: 1rem; }
     .socials { left: 1.5rem; }
     .location-badge { right: 1.5rem; }
+
+    /* Work layout - stack vertically */
+    .work-layout {
+      grid-template-columns: 1fr !important;
+      gap: 2rem !important;
+      padding: 0 1.5rem !important;
+    }
+    .work-left {
+      position: static !important;
+    }
+
+    /* Work grid - 1 column on mobile */
+    .work-grid {
+      grid-template-columns: 1fr !important;
+      gap: 0.75rem !important;
+    }
+
+    /* Featured card full width */
+    .work-featured {
+      margin-bottom: 0.75rem;
+    }
+
+    /* Card image height */
+    .work-thumb.small {
+      aspect-ratio: 4/3;
+    }
+    .work-title.small {
+      font-size: 0.75rem;
+    }
+
+    /* Brands grid - 3 columns on tablet, 2 on phone */
+    .brands-grid {
+      grid-template-columns: repeat(3, 1fr) !important;
+      gap: 0.75rem !important;
+    }
+    .brand-pill:nth-child(n) {
+      grid-column: auto !important;
+    }
+    .brand-pill {
+      padding: 1.2rem 1rem 1rem !important;
+    }
+    .brand-pill img {
+      max-height: 36px;
+    }
+    .brands-strip { padding: 3rem 1.5rem !important; }
+
+    /* Expertise grid */
+    .expertise-grid, .expertise-top-grid, div[style*="grid-template-columns:1fr 1fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+    .expertise-bottom-grid {
+      grid-template-columns: 1fr !important;
+      max-width: 100% !important;
+    }
+    .expertise-card-inner {
+      flex-direction: column !important;
+    }
+    .expertise-card-img-mobile {
+      order: -1 !important;
+      width: 90px !important;
+      height: 90px !important;
+      align-self: flex-start;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .brands-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+    .work-grid {
+      grid-template-columns: 1fr !important;
+    }
+    .hero-title { font-size: clamp(2.5rem, 10vw, 4rem) !important; }
   }
 </style>
 </head>
 <body>
 
 <nav>
-  <a href="index.html" class="nav-logo">kenny<span style="color:#c4450a">.</span>xu</a>
-  <ul class="nav-links">
-    <li><a href="#work">Work</a></li>
-    <li><a href="resume.html">Experience</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-
+  <div style="display:flex;align-items:center;gap:2.5rem;">
+    <a href="index.html" class="nav-logo">kenny<span style="color:#c4450a">.</span>xu</a>
+    <ul class="nav-links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="resume.html">Experience</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#work" onclick="toggleMenu()">Work</a>
+  <a href="resume.html">Experience</a>
+  <a href="#contact" onclick="toggleMenu()">Contact</a>
+</div>
 
 <section class="hero">
   <div class="hero-left">
@@ -1194,10 +1319,11 @@
     <h2 class="section-title" style="transform:scaleX(0.72); display:block;">Expertise</h2>
   </div>
 
-  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1.25rem; margin-bottom:1.25rem;">
+  <div class="expertise-top-grid" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1.25rem; margin-bottom:1.25rem;">
 
     <div style="background:#fff; border-radius:16px; padding:2rem; display:flex; flex-direction:column; justify-content:space-between; min-height:280px; position:relative; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem;">
+      <div class="expertise-card-inner" style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem;">
+        <img class="expertise-card-img-mobile" src="images/image-15.png" alt="Go-to-Market" style="width:130px; height:130px; object-fit:contain; flex-shrink:0;"/>
         <div style="flex:1;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
             <h3 style="font-family:'Syne',sans-serif; font-size:1.15rem; font-weight:700; color:#0e0e0e;">Go-to-Market</h3>
@@ -1205,12 +1331,12 @@
           </div>
           <p style="font-size:0.85rem; line-height:1.65; color:#6b6560; font-weight:300;">Strategic planning and execution for complex product launches across diverse international markets, specialising in bridging the gap between technical development and commercial success.</p>
         </div>
-        <img src="images/image-15.png" alt="Go-to-Market" style="width:130px; height:130px; object-fit:contain; flex-shrink:0;"/>
       </div>
     </div>
 
     <div style="background:#fff; border-radius:16px; padding:2rem; display:flex; flex-direction:column; justify-content:space-between; min-height:280px; position:relative; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem;">
+      <div class="expertise-card-inner" style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem;">
+        <img class="expertise-card-img-mobile" src="images/image-16.png" alt="Product Management" style="width:130px; height:130px; object-fit:contain; flex-shrink:0;"/>
         <div style="flex:1;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
             <h3 style="font-family:'Syne',sans-serif; font-size:1.15rem; font-weight:700; color:#0e0e0e;">Product Management</h3>
@@ -1218,12 +1344,12 @@
           </div>
           <p style="font-size:0.85rem; line-height:1.65; color:#6b6560; font-weight:300;">End-to-end lifecycle leadership from discovery to scale, managing high-stakes technical roadmaps, cross-functional engineering teams, and stakeholder alignment.</p>
         </div>
-        <img src="images/image-16.png" alt="Product Management" style="width:130px; height:130px; object-fit:contain; flex-shrink:0;"/>
       </div>
     </div>
 
     <div style="background:#fff; border-radius:16px; padding:2rem; display:flex; flex-direction:column; justify-content:space-between; min-height:280px; position:relative; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem;">
+      <div class="expertise-card-inner" style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem;">
+        <img class="expertise-card-img-mobile" src="images/image-17.png" alt="Analytics" style="width:130px; height:130px; object-fit:contain; flex-shrink:0;"/>
         <div style="flex:1;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
             <h3 style="font-family:'Syne',sans-serif; font-size:1.15rem; font-weight:700; color:#0e0e0e;">Analytics &amp; Insights</h3>
@@ -1231,16 +1357,16 @@
           </div>
           <p style="font-size:0.85rem; line-height:1.65; color:#6b6560; font-weight:300;">Transforming raw data into actionable business intelligence through custom-built unified platforms, enabling data-driven decision making at the executive level.</p>
         </div>
-        <img src="images/image-17.png" alt="Analytics" style="width:130px; height:130px; object-fit:contain; flex-shrink:0;"/>
       </div>
     </div>
 
   </div>
 
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; max-width:66%; margin:0 auto;">
+  <div class="expertise-bottom-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; max-width:66%; margin:0 auto;">
 
     <div style="background:#fff; border-radius:16px; padding:2rem; display:flex; flex-direction:column; justify-content:space-between; min-height:280px; position:relative; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem;">
+      <div class="expertise-card-inner" style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem;">
+        <img class="expertise-card-img-mobile" src="images/image-18.png" alt="Virtual Reality" style="width:130px; height:130px; object-fit:contain; flex-shrink:0;"/>
         <div style="flex:1;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
             <h3 style="font-family:'Syne',sans-serif; font-size:1.15rem; font-weight:700; color:#0e0e0e;">Virtual Reality</h3>
@@ -1248,12 +1374,12 @@
           </div>
           <p style="font-size:0.85rem; line-height:1.65; color:#6b6560; font-weight:300;">Developing immersive ecosystems and hardware-software strategies, with a focus on 5G-enabled cloud VR infrastructure and global partnership development.</p>
         </div>
-        <img src="images/image-18.png" alt="Virtual Reality" style="width:130px; height:130px; object-fit:contain; flex-shrink:0;"/>
       </div>
     </div>
 
     <div style="background:#fff; border-radius:16px; padding:2rem; display:flex; flex-direction:column; justify-content:space-between; min-height:280px; position:relative; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem;">
+      <div class="expertise-card-inner" style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem;">
+        <img class="expertise-card-img-mobile" src="images/image-19.png" alt="Process Automation" style="width:130px; height:130px; object-fit:contain; flex-shrink:0;"/>
         <div style="flex:1;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
             <h3 style="font-family:'Syne',sans-serif; font-size:1.15rem; font-weight:700; color:#0e0e0e;">Process Automation</h3>
@@ -1261,7 +1387,6 @@
           </div>
           <p style="font-size:0.85rem; line-height:1.65; color:#6b6560; font-weight:300;">Leveraging AI and automation tools to streamline complex editorial and advertising workflows, significantly reducing manual overhead and increasing ROI.</p>
         </div>
-        <img src="images/image-19.png" alt="Process Automation" style="width:130px; height:130px; object-fit:contain; flex-shrink:0;"/>
       </div>
     </div>
 
@@ -1277,17 +1402,12 @@
   </div>
   <div class="contact-right">
     <p>I'm always open to senior PM roles, consulting, and interesting product challenges. Based in Sydney — open to global opportunities.</p>
-    <a href="/cdn-cgi/l/email-protection#d6bdb3b8b8afaea396b3bbb7bfbaf8b5b9bb" class="contact-email"><span class="__cf_email__" data-cfemail="93f8f6fdfdeaebe6d3f6fef2faffbdf0fcfe">[email&#160;protected]</span> →</a>
-    <div class="contact-links">
-      <a href="#" class="contact-link">LinkedIn</a>
-      <a href="#" class="contact-link">GitHub</a>
-      <a href="tel:+61400000000" class="contact-link">+61 4XX XXX XXX</a>
-    </div>
+    <a href="mailto:kenny_xu@outlook.com.au" class="contact-email">kenny_xu@outlook.com.au →</a>
   </div>
 </section>
 
 <footer>
-  <span>© 2025 Kenny Xu</span>
+  <span>© 2026 Kenny Xu</span>
   <span>Sydney, AU</span>
 </footer>
 
@@ -1318,4 +1438,10 @@
     });
   }, { threshold: 0.12 });
 
- 
+  function toggleMenu() {
+    document.querySelector('.hamburger').classList.toggle('active');
+    document.getElementById('mobileMenu').classList.toggle('open');
+    document.body.style.overflow = document.getElementById('mobileMenu').classList.contains('open') ? 'hidden' : '';
+  }
+</script>
+</html>
